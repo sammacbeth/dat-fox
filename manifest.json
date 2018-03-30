@@ -1,0 +1,21 @@
+{
+    "author": "Sam Macbeth",
+    "description": "Makes the dat:// protocol available",
+    "manifest_version": 2,
+    "name": "DAT P2P Protocol",
+    "version": "0.1",
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "permissions": [
+        "proxy",
+        "webRequest",
+        "webRequestBlocking",
+        "<all_urls>"
+    ],
+    "protocol_handlers": [{
+        "protocol": "dat",
+        "name": "DAT",
+        "uriTemplate": "http://dat.redirect/?%s"
+    }]
+}
