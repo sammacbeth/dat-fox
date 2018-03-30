@@ -63,3 +63,22 @@ browser.webRequest.onBeforeRequest.addListener((details) => {
 }, {
     urls: [`http://dat.redirect/*`],
 }, ['blocking']);
+
+// change dat:// urls to http:// in html documents because protocol handlers do not work on
+// third-party calls
+browser.webRequest.onHeadersReceived.addListener((details) => {
+    const host = details.url.split('/')[2];
+
+    if (datSites.has(host) || datUrlMatcher.test(host)) {
+        const filter = browser.webRequest.filterResponseData(details.requestId);
+        const decoder = new TextDecoder("utf-8");
+        const encoder = new TextEncoder();
+        filter.ondata = event => {
+            const content = decoder.decode(event.data, {stream: true});
+            filter.write(encoder.encode(content.replace(/dat\:\/\//g, 'http://')))
+        }
+    }
+}, {
+    urls: ['http://*/*'],
+    types: ['main_frame', 'sub_frame']
+}, ["blocking"]);
