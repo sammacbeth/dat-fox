@@ -174,7 +174,7 @@ browser.pageAction.onClicked.addListener((tab) => {
                         url: tab.url.replace('https://', 'dat://'),
                     }
                 );
-            } else if (protocol === 'http:') {
+            } else if (protocol === 'http:' && datSites.has(host)) {
                 // already on dat, switch back to http
                 console.log(host, 'switch to https');
                 removeDatSite(host);
