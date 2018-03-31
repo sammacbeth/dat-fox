@@ -2,7 +2,7 @@
 const pacFile = 'pac.js';
 const pacFileUrl = browser.extension.getURL(pacFile);
 const datSites = new Set(['beakerbrowser.com']);
-const datUrlMatcher = /^[0-9a-f]{64}$/
+const datUrlMatcher = /^[0-9a-f]{64}(\+[0-9]+)?$/
 
 // in order to create a valid origin for dat sites we need to 'invent'
 // hostnames for them. We can do this via a pac file which proxies requests
@@ -61,7 +61,7 @@ browser.webRequest.onBeforeRequest.addListener((details) => {
         redirectUrl: `http://${datUrl}`,
     }
 }, {
-    urls: [`http://dat.redirect/*`],
+    urls: ['http://dat.redirect/*'],
 }, ['blocking']);
 
 // change dat:// urls to http:// in html documents because protocol handlers do not work on

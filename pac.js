@@ -1,6 +1,6 @@
 
 const datSites = new Set();
-const datUrlMatcher = /^[0-9a-f]{64}$/
+const datUrlMatcher = /^[0-9a-f]{64}(\+[0-9]+)?$/
 
 browser.runtime.onMessage.addListener((message) => {
     if (message.action === 'add') {
@@ -10,7 +10,8 @@ browser.runtime.onMessage.addListener((message) => {
 });
 
 function FindProxyForURL(url, host) {
-    if (datSites.has(host) || datUrlMatcher.test(host)) {
+    const [domain, verion] = host.split('+');
+    if (datSites.has(domain) || datUrlMatcher.test(host)) {
         browser.runtime.sendMessage(`loading url over dat: ${url}`);
         return [{
             type: 'http',
