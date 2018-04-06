@@ -21,7 +21,7 @@ It aims to implement native-like dat support possible in Firefox. This means:
 
    ​
 
-2. Install the extension.
+2. Install the extension: (1) git clone this project, (2) open a tab with the address `about:debugging`, (3) click "Load Temporary Add-on", (4) choose the file `..../dat-fox/manifest.json`.
 
 3. Visit a `dat://` URL. 
 
