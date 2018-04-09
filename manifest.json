@@ -4,6 +4,9 @@
     "manifest_version": 2,
     "name": "Dat P2P Protocol",
     "version": "0.1",
+    "icons": {
+        "48": "assets/dat-hexagon.svg"
+    },
     "background": {
         "scripts": ["background.js"]
     },
