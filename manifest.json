@@ -17,7 +17,7 @@
     "protocol_handlers": [{
         "protocol": "dat",
         "name": "Dat",
-        "uriTemplate": "http://dat.redirect/?%s"
+        "uriTemplate": "http://dat.localhost/?%s"
     }],
     "page_action": {
         "browser_style": true,

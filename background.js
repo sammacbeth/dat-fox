@@ -64,12 +64,12 @@ function registerDowngradeHandler() {
 }
 
 /*
- * Listen for requests to a fake redirect host (dat.redirect), and redirect to a url which will be
+ * Listen for requests to a fake redirect host (dat.localhost), and redirect to a url which will be
  * proxied to the dat-gateway.
  */
 browser.webRequest.onBeforeRequest.addListener((details) => {
     // replace url encoded dat:// prefix
-    const datUrl = decodeURIComponent(details.url.replace('http://dat.redirect/?dat%3A%2F%2F', ''));
+    const datUrl = decodeURIComponent(details.url.replace('http://dat.localhost/?dat%3A%2F%2F', ''));
     const hostOrAddress = datUrl.split('/')[0];
 
     // if its a plain dat url, just do the redirect
@@ -85,7 +85,7 @@ browser.webRequest.onBeforeRequest.addListener((details) => {
         redirectUrl: `http://${datUrl}`,
     }
 }, {
-    urls: ['http://dat.redirect/*'],
+    urls: ['http://dat.localhost/*'],
 }, ['blocking']);
 
 // change dat:// urls to http:// in html documents because protocol handlers do not work on
