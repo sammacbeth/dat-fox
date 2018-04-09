@@ -29,7 +29,6 @@ function switchToDatProtocol(details) {
     }
 }
 
-
 /**
  * Add a site which should be loaded over dat instead of https. Instructs the pac file to proxy
  * requests to this host via the dat-gateway, and to downgrade any requests to https address for 
@@ -147,10 +146,19 @@ browser.webRequest.onCompleted.addListener((details) => {
             resolve(Promise.resolve(wellKnownCache.get(host)));
         }
         fetch(`https://${host}/.well-known/dat`, { redirect: 'manual' }).then((resp) => {
-            wellKnownCache.set(host, resp.ok);
-            resolve(resp.ok);
-        });
+            if (resp.ok) {
+                return resp.text().then(text => {
+                    try {
+                        return /^dat:\/\/([0-9a-f]{64})/i.test(text.split('/n')[0]);
+                    } catch(e) {
+                        return false
+                    }
+                })
+            }
+            return false;
+        }).then(resolve);
     })).then((wellKnown) => {
+        wellKnownCache.set(host, wellKnown);
         if (wellKnown) {
             showDatAvailableIcon(details.tabId);
         }
