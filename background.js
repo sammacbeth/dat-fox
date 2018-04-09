@@ -22,6 +22,36 @@ browser.runtime.onMessage.addListener((message, sender) => {
     }
 });
 
+function setGatewayAddress(address) {
+    const addressRegex = /(https?):\/\/([^/\?:]+)(:[0-9]+)?/
+    let [_, type, host, port] = address.match(addressRegex);
+    if (!port) {
+        port = type === 'https' ? 443 : 80;
+    } else {
+        port = Number(port.substring(1));
+    }
+    console.log('update gateway address to', type, host, port);
+    browser.runtime.sendMessage({
+        action: 'setGateway',
+        type,
+        host,
+        port,
+    }, { toProxyScript: true });
+}
+
+// read settings for gateway
+browser.storage.local.get('gatewayAddress').then((res) => {
+    if (res.gatewayAddress) {
+        setGatewayAddress(res.gatewayAddress);
+    }
+});
+
+browser.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === 'local' && changes.gatewayAddress) {
+        setGatewayAddress(changes.gatewayAddress.newValue);
+    }
+});
+
 function switchToDatProtocol(details) {
     // downgrade requests to get dat version
     return {

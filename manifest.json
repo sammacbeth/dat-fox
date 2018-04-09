@@ -15,7 +15,8 @@
         "tabs",
         "webRequest",
         "webRequestBlocking",
-        "<all_urls>"
+        "<all_urls>",
+        "storage"
     ],
     "protocol_handlers": [{
         "protocol": "dat",
@@ -26,5 +27,9 @@
         "browser_style": true,
         "default_title": "Dat",
         "default_icon": "assets/dat-hexagon.svg"
+    },
+    "options_ui": {
+        "page": "options.html",
+        "browser_style": true
     }
 }
