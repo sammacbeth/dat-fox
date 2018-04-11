@@ -18,11 +18,12 @@ const bridge = new NativeBridge();
 bridge.connect().then(() => {
     console.log('bridge is ready');
     useNativeBridge(bridge);
+    const port = 3000 + Math.floor(Math.random() * 500);
     bridge.postMessage({
         action: 'startGateway',
-        port: 3000,
+        port: port,
     }).then(() => {
-        setGatewayAddress('http://localhost:3000');
+        setGatewayAddress(`http://localhost:${port}`);
     }, (e) => console.error('error starting gateway', e));
 }, (e) => {
     console.log('bridge loading failed, using local Dat API implementation', e);
