@@ -3,7 +3,7 @@ const wellKnownCache = new Map();
 
 // TODO: see if we can browserify dat-dns
 export function resolveName(host) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         if (wellKnownCache.has(host)) {
             resolve(Promise.resolve(wellKnownCache.get(host)));
         }
@@ -11,7 +11,7 @@ export function resolveName(host) {
             if (resp.ok) {
                 return resp.text().then(text => {
                     try {
-                        return /^dat:\/\/([0-9a-f]{64})/i.exec(text.split('/n')[0])[0];
+                        return /^dat:\/\/([0-9a-f]{64})/i.exec(text.split('/n')[0])[1];
                     } catch(e) {
                         return false;
                     }
@@ -20,6 +20,10 @@ export function resolveName(host) {
             return false;
         }).then((address) => {
             wellKnownCache.set(host, address);
+            if (!address) {
+                reject();
+                return;
+            }
             resolve(address);
         });
     });

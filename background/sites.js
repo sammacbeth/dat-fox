@@ -2,7 +2,7 @@
  * Handles dat sites (domains mapped to dat addresses).
  */
 import { sendMessageToPAC } from './proxy';
-import { resolveName } from './dat-dns';
+import datApis from './dat-apis';
 
 export const datSites = new Set();
 
@@ -51,9 +51,9 @@ function switchToDatProtocol(details) {
     // redirect
     if (requestCtr.has(details.requestId)) {
         const [,, host, path] = details.url.split('/', 4);
-        return resolveName(host).then((address) => {
+        return datApis.DatArchive.resolveName(host).then((address) => {
             return {
-                redirectUrl: `${address.replace('dat://', 'http://')}/${path}`,
+                redirectUrl: `dat://${address}/${path}`,
             };
         });
     }

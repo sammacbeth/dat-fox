@@ -3,7 +3,13 @@
     "description": "Makes the dat:// protocol available",
     "manifest_version": 2,
     "name": "Dat P2P Protocol",
-    "version": "0.0.2",
+    "version": "0.0.3",
+    "applications": {
+        "gecko": {
+            "id": "dat-fox@sammacbeth.eu",
+            "strict_min_version": "58.0"
+        }
+    },
     "icons": {
         "48": "assets/dat-hexagon.svg"
     },
@@ -16,7 +22,8 @@
         "webRequest",
         "webRequestBlocking",
         "<all_urls>",
-        "storage"
+        "storage",
+        "nativeMessaging"
     ],
     "protocol_handlers": [{
         "protocol": "dat",
