@@ -18,12 +18,30 @@ It aims to implement native-like dat support possible in Firefox. This means:
    npm install
    ./bin.js
    ```
-
-   ​
-
-2. Install the extension: (1) git clone this project, (2) open a tab with the address `about:debugging`, (3) click "Load Temporary Add-on", (4) choose the file `..../dat-fox/manifest.json`.
+   
+2. Install the extension from the [Mozilla Addon Store](https://addons.mozilla.org/en-US/firefox/addon/dat-p2p-protocol/)
 
 3. Visit a `dat://` URL. 
+
+## Local development
+
+You can also build and run the extension locally. You will need a version of node greather that 7. [nvm](https://github.com/creationix/nvm) is recommended for installing node.
+
+```bash
+git clone https://github.com/sammacbeth/dat-fox.git
+cd dat-fox
+# install build dependencies
+npm install
+# build
+npm run build
+# if you want to watch for file changes
+npm run serve
+```
+
+You can now load the `addon` folder as a temporary addon in Firefox:
+ 1. Go to `about:debugging` in Firefox.
+ 2. Chose `Load Temporary Addon`.
+ 3. Browser to the `addon` folder and chose any file in this folder.
 
 ## What works
 
