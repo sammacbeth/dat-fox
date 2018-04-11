@@ -8,7 +8,7 @@
         "48": "assets/dat-hexagon.svg"
     },
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["background/index.js"]
     },
     "permissions": [
         "proxy",
@@ -29,7 +29,7 @@
         "default_icon": "assets/dat-hexagon.svg"
     },
     "options_ui": {
-        "page": "options.html",
+        "page": "options_page/options.html",
         "browser_style": true
     }
 }

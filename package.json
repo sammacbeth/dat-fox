@@ -1,0 +1,26 @@
+{
+  "name": "dat-fox",
+  "version": "0.0.1",
+  "description": "A Webextension for the dat:// protocol",
+  "main": "background.js",
+  "scripts": {
+    "build": "webpack",
+    "serve": "webpack -w",
+    "package": "webpack && web-ext build -s addon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sammacbeth/dat-fox.git"
+  },
+  "author": "Sam Macbeth",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sammacbeth/dat-fox/issues"
+  },
+  "homepage": "https://github.com/sammacbeth/dat-fox#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "web-ext": "^2.6.0",
+    "webpack": "^2.3.2"
+  }
+}
