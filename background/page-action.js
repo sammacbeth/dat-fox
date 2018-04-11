@@ -1,31 +1,12 @@
 // detect www sites which publish a dat version
 // TODO should probably rely on dat-dns for this.
 import { datSites, removeDatSite } from './sites';
-
-export const wellKnownCache = new Map();
+import { resolveName } from './dat-dns';
 
 function init() {
     browser.webRequest.onCompleted.addListener((details) => {
         const host = details.url.split('/')[2];
-        console.log('host', host);
-        (new Promise((resolve) => {
-            if (wellKnownCache.has(host)) {
-                resolve(Promise.resolve(wellKnownCache.get(host)));
-            }
-            fetch(`https://${host}/.well-known/dat`, { redirect: 'manual' }).then((resp) => {
-                if (resp.ok) {
-                    return resp.text().then(text => {
-                        try {
-                            return /^dat:\/\/([0-9a-f]{64})/i.test(text.split('/n')[0]);
-                        } catch(e) {
-                            return false;
-                        }
-                    });
-                }
-                return false;
-            }).then(resolve);
-        })).then((wellKnown) => {
-            wellKnownCache.set(host, wellKnown);
+        resolveName(host).then((wellKnown) => {
             if (wellKnown) {
                 showDatAvailableIcon(details.tabId);
             }
@@ -63,7 +44,10 @@ export function showDatAvailableIcon(tabId) {
 // Page action for dat enabled sites: reloads the page over dat.
 browser.pageAction.onClicked.addListener((tab) => {
     const [protocol, , host] = tab.url.split('/');
-    if (wellKnownCache.get(host) === true) {
+    resolveName(host).then((wellKnown) => {
+        if (!wellKnown) {
+            return;
+        }
         // flush browser cache for redirects
         browser.webRequest.handlerBehaviorChanged().then(() => {
             if (protocol === 'https:') {
@@ -85,7 +69,7 @@ browser.pageAction.onClicked.addListener((tab) => {
                 );
             }
         });
-    }
+    });
 });
 
 export default {

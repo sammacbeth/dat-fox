@@ -2,6 +2,7 @@
  * Handles dat sites (domains mapped to dat addresses).
  */
 import { sendMessageToPAC } from './proxy';
+import { resolveName } from './dat-dns';
 
 export const datSites = new Set();
 
@@ -39,7 +40,24 @@ function registerDowngradeHandler() {
     }
 }
 
+const requestCtr = new Set();
+setInterval(() => {
+    requestCtr.clear();
+}, 30000);
+
 function switchToDatProtocol(details) {
+    // detect a repeated requestId through this handler. This means that the browser is preventing
+    // the downgrade. In this case, we redirect to the full dat address to prevent an infinite
+    // redirect
+    if (requestCtr.has(details.requestId)) {
+        const [,, host, path] = details.url.split('/', 4);
+        return resolveName(host).then((address) => {
+            return {
+                redirectUrl: `${address.replace('dat://', 'http://')}/${path}`,
+            };
+        });
+    }
+    requestCtr.add(details.requestId);
     // downgrade requests to get dat version
     return {
         redirectUrl: details.url.replace('https://', 'http://'),
