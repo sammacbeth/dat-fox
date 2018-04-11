@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "serve": "webpack -w",
-    "package": "webpack && web-ext build -s addon"
+    "package": "webpack && web-ext build -s addon",
+    "lint": "eslint background/"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "homepage": "https://github.com/sammacbeth/dat-fox#readme",
   "dependencies": {},
   "devDependencies": {
+    "eslint": "^4.19.1",
     "web-ext": "^2.6.0",
     "webpack": "^2.3.2"
   }

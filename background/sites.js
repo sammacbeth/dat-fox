@@ -43,5 +43,5 @@ function switchToDatProtocol(details) {
     // downgrade requests to get dat version
     return {
         redirectUrl: details.url.replace('https://', 'http://'),
-    }
+    };
 }

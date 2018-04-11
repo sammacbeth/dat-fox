@@ -15,15 +15,15 @@ browser.runtime.onMessage.addListener((message, sender) => {
 });
 
 export function setGatewayAddress(address) {
-    const addressRegex = /(https?):\/\/([^/\?:]+)(:[0-9]+)?/
-    let [_, type, host, port] = address.match(addressRegex);
+    const addressRegex = /(https?):\/\/([^/?:]+)(:[0-9]+)?/;
+    let [, type, host, port] = address.match(addressRegex);
     if (!port) {
         port = type === 'https' ? 443 : 80;
     } else {
         port = Number(port.substring(1));
     }
     console.log('update gateway address to', type, host, port);
-    sendMessage({
+    sendMessageToPAC({
         action: 'setGateway',
         type,
         host,
