@@ -32,29 +32,19 @@ function init() {
         urls: ['http://dat.localhost/*'],
     }, ['blocking']);
 
-
-    // change dat:// urls to http:// in html documents because protocol handlers do not work on
-    // third-party calls
-    browser.webRequest.onHeadersReceived.addListener((details) => {
+    // insert contentscript on dat pages
+    browser.webRequest.onCompleted.addListener((details) => {
         const host = details.url.split('/')[2];
-
         if (datSites.has(host) || datUrlMatcher.test(host)) {
-            const filter = browser.webRequest.filterResponseData(details.requestId);
-            const decoder = new TextDecoder('utf-8');
-            const encoder = new TextEncoder();
-            filter.ondata = event => {
-                const content = decoder.decode(event.data, { stream: true });
-                filter.write(encoder.encode(content.replace(/dat:\/\//g, 'http://')));
-            };
-            // trigger page_action for dat pages
-            setTimeout(() => {
-                showDatSecureIcon(details.tabId);
-            }, 200);
+            browser.tabs.executeScript(details.tabId, {
+                file: browser.extension.getURL('content_script.js'),
+                runAt: 'document_start',
+            }).then((m) => console.log('xxxm', m), (e) => console.error('xxxa', e))
         }
     }, {
         urls: ['http://*/*'],
-        types: ['main_frame', 'sub_frame']
-    }, ['blocking']);
+        types: ['main_frame']
+    });
 }
 
 export default {
