@@ -28,3 +28,23 @@ bridge.connect().then(() => {
 }, (e) => {
     console.log('bridge loading failed, using local Dat API implementation', e);
 });
+
+const passthroughActions = new Set(['resolveName']);
+browser.runtime.onConnect.addListener((port) => {
+    port.onMessage.addListener((message) => {
+        const { id, action } = message;
+        if (passthroughActions.has(action)) {
+            bridge.postMessage(message).then(
+                result => ({ id, result }),
+                error => ({ id, error })
+            ).then(response => {
+                port.postMessage(response)
+            });
+        } else {
+            port.postMessage({
+                id,
+                error: 'unsupported action',
+            });
+        }
+    });
+});
