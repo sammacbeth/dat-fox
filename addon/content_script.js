@@ -21,7 +21,7 @@ exportFunction(addListener, window, { defineAs: '_datfoxAddListener' });
 
 // inject datArchive script into the page
 const scriptTag = document.createElement('script');
-scriptTag.src = browser.extension.getURL('dat-archive.js');
+scriptTag.src = browser.extension.getURL('window.js');
 const target = document.head || document.documentElement;
 target.appendChild(scriptTag);
 scriptTag.parentNode.removeChild(scriptTag);

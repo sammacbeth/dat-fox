@@ -14,7 +14,7 @@
         "48": "assets/dat-hexagon.svg"
     },
     "background": {
-        "scripts": ["background/index.js"]
+        "scripts": ["background.js"]
     },
     "permissions": [
         "proxy",
