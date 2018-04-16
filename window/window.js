@@ -1,3 +1,4 @@
+import createDatArchiveApi from '../common/dat-archive-rpc';
 
 (function (window) {
     let messageIdx = 0;
@@ -29,14 +30,6 @@
         }
     });
 
-    window.DatArchive = class DatArchive {
-        constructor() {
-            throw 'Not implemented';
-        }
-
-        static async resolveName(name) {
-            return postMessage({ action: 'resolveName', name });
-        }
-    }
+    window.DatArchive = createDatArchiveApi({ postMessage });
 
 })(window);
