@@ -29,7 +29,7 @@ bridge.connect().then(() => {
     console.log('bridge loading failed, using local Dat API implementation', e);
 });
 
-const passthroughActions = new Set(['resolveName']);
+const passthroughActions = new Set(['resolveName', 'getInfo', 'stat', 'readdir', 'history']);
 browser.runtime.onConnect.addListener((port) => {
     port.onMessage.addListener((message) => {
         const { id, action } = message;
