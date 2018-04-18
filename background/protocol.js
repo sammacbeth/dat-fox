@@ -39,7 +39,8 @@ function init() {
             browser.tabs.executeScript(details.tabId, {
                 file: browser.extension.getURL('content_script.js'),
                 runAt: 'document_start',
-            }).then((m) => console.log('xxxm', m), (e) => console.error('xxxa', e))
+            });
+            showDatSecureIcon(details.tabId);
         }
     }, {
         urls: ['http://*/*'],

@@ -11,4 +11,4 @@ export default {
     get DatArchive() {
         return datArchive;
     }
-}
+};

@@ -28,9 +28,9 @@ bridge.connect().then(() => {
     }, (e) => console.error('error starting gateway', e));
     // add actions which the helper API supports
     ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile']
-    .forEach((action) => {
-        passthroughActions.add(action);
-    })
+        .forEach((action) => {
+            passthroughActions.add(action);
+        });
 }, (e) => {
     console.log('bridge loading failed, using local Dat API implementation', e);
 });
@@ -51,7 +51,7 @@ browser.runtime.onConnect.addListener((port) => {
                 result => ({ id, result }),
                 error => ({ id, error })
             ).then(response => {
-                port.postMessage(response)
+                port.postMessage(response);
             });
         } else if (handlers[action]) {
             handlers[action](message).then((result) => {
