@@ -7,7 +7,7 @@ export default class {
     }
 
     connect() {
-        this.port = browser.runtime.connectNative("datbridge");
+        this.port = browser.runtime.connectNative("dathelper");
         this.port.onMessage.addListener(this.onMessage.bind(this));
         
         return new Promise((resolve, reject) => {
