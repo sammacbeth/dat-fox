@@ -1,12 +1,11 @@
 import { resolveName } from './dat-dns';
 
 export default class DatArchive {
-    constructor (url) {
-
+    constructor(datUrl) {
+        this.url = datUrl;
     }
 
-    static async resolveName(name) {
+    static resolveName(name) {
         return resolveName(name);
     }
-
 }

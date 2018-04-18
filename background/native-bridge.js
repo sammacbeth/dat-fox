@@ -7,7 +7,7 @@ export default class {
     }
 
     connect() {
-        this.port = browser.runtime.connectNative("dathelper");
+        this.port = browser.runtime.connectNative('dathelper');
         this.port.onMessage.addListener(this.onMessage.bind(this));
         
         return new Promise((resolve, reject) => {
@@ -18,14 +18,14 @@ export default class {
             };
             const timer = setTimeout(() => {
                 this.port.onDisconnect.removeListener(disconnectListener);
-                resolve()
+                resolve();
             }, 2000);
             this.port.onDisconnect.addListener(disconnectListener);
         });
     }
 
     onMessage(response) {
-        console.log("Received: " + JSON.stringify(response));
+        console.log('Received: ' + JSON.stringify(response));
         if (this.waitingForResponse.has(response.id)) {
             const { resolve, reject } = this.waitingForResponse.get(response.id);
             this.waitingForResponse.delete(response.id);
@@ -47,5 +47,5 @@ export default class {
             });
             this.port.postMessage(message);
         });
-    };
-};
+    }
+}
