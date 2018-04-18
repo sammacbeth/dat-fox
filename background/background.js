@@ -27,7 +27,8 @@ bridge.connect().then(() => {
         setGatewayAddress(`http://localhost:${port}`);
     }, (e) => console.error('error starting gateway', e));
     // add actions which the helper API supports
-    ['resolveName', 'getInfo', 'stat', 'readdir', 'history'].forEach((action) => {
+    ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile']
+    .forEach((action) => {
         passthroughActions.add(action);
     })
 }, (e) => {

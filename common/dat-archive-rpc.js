@@ -35,11 +35,11 @@ export default function(rpc) {
         }
 
         async readFile(path, opts) {
-            return fetch(this.url.replace('dat://', 'http://')).then((resp) => {
-                if (opts.encoding === 'binary') {
-                    return resp.blob();
-                }
-                return resp.text();
+            return rpc.postMessage({
+                action: 'readFile',
+                url: this.url,
+                path,
+                opts,
             });
         }
 
