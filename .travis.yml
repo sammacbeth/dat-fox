@@ -1,11 +1,19 @@
 language: node_js
 node_js:
-  - "9"
+- '9'
 sudo: false
-
 install:
-  - npm install --silent
-
+- npm install --silent
 script:
-  - npm run lint
-  - npm run build
+- npm run lint
+- npm run package
+deploy:
+  provider: releases
+  skip_cleanup: true  
+  api_key:
+    secure: JTegSt9GeJ0d9E+CkmzPIoJ7vGaMvoCX6dndS7IFq1X+A17i8uHfYCbEh2QysBFgRfgMogxNpdK6Bo1+jyvHxaRcsJmx5AQQDy+VSG8Gh1be9y+zt2J2d+lo+c8TnoRxgrK3CjuiQZjOhdrPyXWtuhPmw6lx2acbl70MRQnAvHbSGJt0AbZnA/IkDagoF7ruQzImmx+wALhNOGMicMkO2vG6orrCJ75yijBZpiwH/bz+JIVBscf7fuGQHx55ekuQY0ui1TUtu371ESvu/hqBcmuQxzFLw3WiOV3v4VPY53IqH/XdUgvFDeU5yk3zZB4DHdUyRy3oBqjUyvQ79h+Ex2o5RO0gX5IfV+Apb2e0UbiiRIEE4IXOt1948FsrgsOihl428IoVbTVFDjFDBVmq71qsnHHCjuDBjs9gtZcp3m6/2mv91Kmoon452pIkt4jVmA8AIzvcuFa206aexmHXozwkHlEcM9r4+3dvL4zI9UOtG8fl5/EHQeRIFXtpAdltyvD+XnOo1kB+Mj7ES0HEr/RwSC1gpgOQZFeaEXyNZwJa7vKcS5X3/uBDp+amT62ExnwmWrgMRFmdm0loZmVIvVcd62P/xGKZqA9/8KSQkaB4XtIb8w6Jbjbecceg6wxr2Xndrh9oMPuFc3CCEXrzDIA6X6zTWKgJAgKZbe+wbOA=
+  file_glob: true
+  file: web-ext-artifacts/dat_p2p_protocol-*.zip
+  on:
+    repo: sammacbeth/dat-fox
+    tags: true
