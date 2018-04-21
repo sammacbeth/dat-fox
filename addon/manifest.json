@@ -6,7 +6,7 @@
     "version": "0.0.3",
     "applications": {
         "gecko": {
-            "id": "dat-fox@sammacbeth.eu",
+            "id": "{e992d888-6346-4e09-98b5-8c61307970e6}",
             "strict_min_version": "58.0"
         }
     },
