@@ -2,15 +2,17 @@ export default function(rpc) {
 
     return class DatArchive {
         constructor(datUrl) {
-            this.url = datUrl;
+            // in some cases a http url might be passed here
+            // (e.g. if document.location is used by the page)
+            this.url = datUrl.replace('http://', 'dat://');
         }
 
-        static async create({ title, description }= {}) {
-            throw new Error('DatArchive.create: Not implemented');
+        static async create(opts) {
+            return rpc.postMessage({ action: 'create', opts }).then(url => new DatArchive(url));
         }
 
-        static async fork(url, { title, description } = {}) {
-            throw new Error('DatArchive.fork: Not implemented');
+        static async fork(url, opts) {
+            return rpc.postMessage({ action: 'fork', url, opts }).then(url => new DatArchive(url));
         }
 
         static async selectArchive({ title, buttonLabel, filters } = {}) {
@@ -53,31 +55,60 @@ export default function(rpc) {
         }
 
         async writeFile(path, data, opts) {
-            throw new Error('DatArchive.writeFile: Not implemented');
+            return rpc.postMessage({
+                action: 'writeFile',
+                url: this.url,
+                path,
+                data,
+                opts,
+            });
         }
 
         async mkdir(path) {
-            throw new Error('DatArchive.mkdir: Not implemented');
+            return rpc.postMessage({
+                action: 'mkdir',
+                url: this.url,
+                path,
+            });
         }
 
         async unlink(path) {
-            throw new Error('DatArchive.unlink: Not implemented');
+            return rpc.postMessage({
+                action: 'unlink',
+                url: this.url,
+                path,
+            });
         }
 
         async rmdir(path, opts) {
-            throw new Error('DatArchive.rmdir: Not implemented');
+            return rpc.postMessage({
+                action: 'rmdir',
+                url: this.url,
+                path,
+                opts,
+            });
         }
 
         async diff(opts) {
-            throw new Error('DatArchive.diff: Not implemented');
+            return rpc.postMessage({
+                action: 'diff',
+                url: this.url,
+                opts,
+            });
         }
 
         async commit() {
-            throw new Error('DatArchive.commit: Not implemented');
+            return rpc.postMessage({
+                action: 'commit',
+                url: this.url,
+            });
         }
 
          async revert() {
-            throw new Error('DatArchive.revert: Not implemented');
+            return rpc.postMessage({
+                action: 'revert',
+                url: this.url,
+            });
          }
 
          async history(opts) {
@@ -89,7 +120,12 @@ export default function(rpc) {
          }
 
          async download(path, opts) {
-            throw new Error('DatArchive.download: Not implemented');
+            return rpc.postMessage({
+                action: 'download',
+                url: this.url,
+                path,
+                opts,
+            });
          }
 
          async createFileActivityStream(pattern) {

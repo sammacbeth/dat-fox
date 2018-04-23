@@ -16,6 +16,7 @@ proxyReady.then(() => {
 });
 
 const bridge = new NativeBridge();
+global.bridge = bridge;
 bridge.connect().then(() => {
     console.log('bridge is ready');
     useNativeBridge(bridge);
@@ -27,7 +28,8 @@ bridge.connect().then(() => {
         setGatewayAddress(`http://localhost:${port}`);
     }, (e) => console.error('error starting gateway', e));
     // add actions which the helper API supports
-    ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile']
+    ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile', 'writeFile', 'mkdir', 
+        'unlink', 'rmdir', 'diff', 'commit', 'revert', 'download']
         .forEach((action) => {
             passthroughActions.add(action);
         });
