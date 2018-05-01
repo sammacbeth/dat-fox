@@ -1,4 +1,70 @@
+
 export default function(rpc) {
+
+    class ActivityStream {
+        constructor(streamCreated) {
+            this.getId = streamCreated.then(({ streamId }) => streamId);
+            this.listeners = {};
+            this.closed = false;
+        }
+
+        addEventListener(event, fn) {
+            if (!this.listeners[event]) {
+                this.listeners[event] = [fn];
+                this.getId.then(id => {
+                    this._runloop(id, event);
+                })
+            } else {
+                this.listeners[event].push(fn);
+            }
+        }
+
+       _runloop(streamId, event) {
+            if (this.closed) {
+                return Promise.resolve();
+            }
+            rpc.postMessage({
+                action: 'pollActivityStream',
+                streamId,
+                event,
+            }).then((events) => {
+                events.forEach((evt) => {
+                    this.listeners[event].forEach((fn) => {
+                        try {
+                            fn(evt);
+                        } catch(e) {
+                            console.error('Error in stream event listener', e);
+                        }
+                    });
+                });
+            }).then(() => this._runloop(streamId, event));
+        }
+
+        close() {
+            this.closed = true;
+            this.listeners = {};
+            this.getId.then(streamId => {
+                rpc.postMessage({
+                    action: 'closeActivityStream',
+                    streamId,
+                });
+            });
+        }
+    }
+
+    class Stat {
+        constructor(stat) {
+            Object.assign(this, stat);
+        }
+
+        isDirectory() {
+            this._isDirectory;
+        }
+
+        isFile() {
+            this._isFile;
+        }
+    }
 
     return class DatArchive {
         constructor(datUrl) {
@@ -28,12 +94,13 @@ export default function(rpc) {
         }
 
         async stat(path, opts) {
-            return rpc.postMessage({
+            const stat = await rpc.postMessage({
                 action: 'stat',
                 url: this.url,
                 path,
                 opts,
             });
+            return new Stat(stat);
         }
 
         async readFile(path, opts) {
@@ -46,12 +113,16 @@ export default function(rpc) {
         }
 
         async readdir(path, opts) {
-            return rpc.postMessage({
+            const dir = await rpc.postMessage({
                 action: 'readdir',
                 url: this.url,
                 path,
                 opts,
             });
+            if (opts && opts.stat) {
+                return dir.map(({ name, stat }) => ({ name, stat: new Stat(stat)}));
+            }
+            return dir;
         }
 
         async writeFile(path, data, opts) {
@@ -128,12 +199,19 @@ export default function(rpc) {
             });
          }
 
-         async createFileActivityStream(pattern) {
-            throw new Error('DatArchive.createFileActivityStream: Not implemented');
+        createFileActivityStream(pattern) {
+            return new ActivityStream(rpc.postMessage({
+                action: 'createFileActivityStream',
+                url: this.url,
+                pattern,
+            }));
          }
 
-         async createNetworkActivityStream() {
-            throw new Error('DatArchive.createNetworkActivityStream: Not implemented');
+        createNetworkActivityStream() {
+            return new ActivityStream(rpc.postMessage({
+                action: 'createNetworkActivityStream',
+                url: this.url,
+            }));
          }
     }
 }

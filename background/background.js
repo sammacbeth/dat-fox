@@ -29,7 +29,8 @@ bridge.connect().then(() => {
     }, (e) => console.error('error starting gateway', e));
     // add actions which the helper API supports
     ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile', 'writeFile', 'mkdir', 
-        'unlink', 'rmdir', 'diff', 'commit', 'revert', 'download']
+        'unlink', 'rmdir', 'diff', 'commit', 'revert', 'download', 'createFileActivityStream',
+        'createNetworkActivityStream', 'pollActivityStream', 'closeActivityStream']
         .forEach((action) => {
             passthroughActions.add(action);
         });

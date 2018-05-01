@@ -25,7 +25,6 @@ export default class {
     }
 
     onMessage(response) {
-        console.log('Received: ' + JSON.stringify(response));
         if (this.waitingForResponse.has(response.id)) {
             const { resolve, reject } = this.waitingForResponse.get(response.id);
             this.waitingForResponse.delete(response.id);
@@ -38,7 +37,6 @@ export default class {
     }
 
     postMessage(message) {
-        console.log('send', message);
         return new Promise((resolve, reject) => {
             message.id = this.messageIdx++;
             this.waitingForResponse.set(message.id, {
