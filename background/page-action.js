@@ -40,7 +40,7 @@ export function showDatAvailableIcon(tabId) {
         tabId,
         title: 'Dat Version Available',
     });
-    browser.pageAction.setPopup({ TabId, popup: '' });
+    browser.pageAction.setPopup({ tabId, popup: '' });
     browser.pageAction.show(tabId);
 }
 
