@@ -5,6 +5,7 @@ import pageAction from './page-action';
 import NativeBridge from './native-bridge';
 import datApis, { useNativeBridge } from './dat-apis';
 import { addDatSite } from './sites';
+import dialog from './dialog';
 
 // initialise proxy pac file
 proxyReady.then(() => {
@@ -40,32 +41,13 @@ bridge.connect().then(() => {
 
 // actions in this set are forwarded to the native bridge
 const passthroughActions = new Set();
-const dialogs = new Map();
+
 // local handlers for actions from content script
 const handlers = {
     resolveName: (message) => datApis.DatArchive.resolveName(message.name),
     addDatSite: (message) => addDatSite(message.host),
-    create: async (message) => {
-        const win = await browser.windows.create({
-            allowScriptsToClose: true,
-            type: 'panel',
-            url: `/dialog.html#${JSON.stringify(message)}`,
-            width: 500,
-            height: 250,
-        })
-        return new Promise((resolve, reject) => {
-            dialogs.set(message.id, { resolve, reject });
-        });
-    },
-    dialogResponse: ({ dialogId, result, error }) => {
-        if (error) {
-            dialogs.get(dialogId).reject(error);
-        } else {
-            dialogs.get(dialogId).resolve(result);
-        }
-        dialogs.delete(dialogId);
-        return Promise.resolve();
-    }
+    create: (message) => dialog.open(message),
+    dialogResponse: (message) => dialog.onMessage(message),
 };
 
 browser.runtime.onConnect.addListener((port) => {
