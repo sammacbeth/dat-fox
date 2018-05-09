@@ -81,8 +81,8 @@ export default function(rpc) {
             return rpc.postMessage({ action: 'fork', url, opts }).then(url => new DatArchive(url));
         }
 
-        static async selectArchive({ title, buttonLabel, filters } = {}) {
-            throw new Error('DatArchive.selectArchive: Not implemented');
+        static async selectArchive(opts) {
+            return rpc.postMessage({ action: 'selectArchive', opts }).then(url => new DatArchive(url));
         }
 
         static async resolveName(name) {

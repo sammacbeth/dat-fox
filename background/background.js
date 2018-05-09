@@ -48,6 +48,7 @@ const handlers = {
     addDatSite: (message) => addDatSite(message.host),
     create: (message) => dialog.open(message),
     fork: (message) => dialog.open(message),
+    selectArchive: (message) => dialog.open(message),
     dialogResponse: (message) => dialog.onMessage(message),
 };
 

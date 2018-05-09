@@ -91,6 +91,28 @@ async function setupForm() {
                 });
             })
         }, 'fork-form', 'fork-submit');
+    } else if (action === "selectArchive") {
+        const library = await bridge.postMessage({ action: 'listLibrary' });
+        const archiveList = document.getElementById('archives');
+        library.forEach(async ({ url, dir, owner }) => {
+            const archive = new DatArchive(url);
+            const { title, description } = await archive.getInfo();
+            const template = document.createElement('template');
+            template.innerHTML = `<a class="list-group-item list-group-item-action flex-column align-items-start" href="#">
+                <h5>${title}</h5>
+                <small>${dir}</small>
+                <p>${description || ''}</p>
+            </a>`;
+            const elem = template.content.firstChild;
+            archiveList.appendChild(elem);
+            elem.onclick = () => {
+                port.postMessage({
+                    action: 'dialogResponse',
+                    dialogId: id,
+                    result: url,
+                });
+            };
+        });
     }
 }
 
