@@ -3,3 +3,4 @@ addon/background.js
 addon/window.js
 addon/popup.js
 addon/dialog.js
+addon/assets/bootstrap.css

@@ -1,11 +1,14 @@
 import createDatArchiveApi from '../common/dat-archive-rpc';
 
-const { bridge, dialogs } = browser.extension.getBackgroundPage();
+const { bridge } = browser.extension.getBackgroundPage();
 const DatArchive = createDatArchiveApi(bridge);
 const port = browser.runtime.connect();
 
 // read options for dialog from url
 const message = JSON.parse(decodeURIComponent(document.location.hash).substring(1));
+if (!message.opts) {
+    message.opts = {};
+}
 const { action, opts, id } = message;
 
 // make action visible
@@ -23,6 +26,7 @@ Array.prototype.forEach.call(document.getElementsByClassName('cancel'), (btn) =>
 });
 
 function onSubmit(cb, formId, buttonId) {
+    let submitted = false;
     const onSubmit = () => {
         if (submitted) {
             return false;
@@ -36,10 +40,10 @@ function onSubmit(cb, formId, buttonId) {
                 error: error.toString(),
             });
         });
-        document.getElementById(formId).onsubmit = onSubmit;
-        document.getElementById(buttonId).click = onSubmit;
         return false;
     };
+    document.getElementById(formId).onsubmit = onSubmit;
+    document.getElementById(buttonId).click = onSubmit;
 }
 
 // fill fields from input options
@@ -64,7 +68,7 @@ async function setupForm() {
     } else if (action === 'fork') {
         console.log(opts, message);
         const srcArchive = new DatArchive(message.url);
-        document.getElementById('fork-url').innerText = message.url;
+        document.getElementById('fork-url').innerText = srcArchive.url;
         const info = await srcArchive.getInfo({ timeout: 30000 });
         if (info.title) {
             document.getElementById('fork-message').innerText = `Fork '${info.title}'`;
@@ -73,8 +77,10 @@ async function setupForm() {
         const desc = document.getElementById('fork-desc');
         title.setAttribute('value', opts.title || info.title || '');
         desc.setAttribute('value', opts.description || info.description || '');
-        onSubmit(() =>
-            DatArchive.fork(message.url, {
+        onSubmit(() => {
+            title.setAttribute('disabled', true);
+            desc.setAttribute('disabled', true);
+            return DatArchive.fork(message.url, {
                 title: title.getAttribute('value'),
                 desc: desc.getAttribute('value'),
             }).then((archive) => {
@@ -83,7 +89,8 @@ async function setupForm() {
                     dialogId: id,
                     result: archive.url,
                 });
-            }), 'fork-form', 'fork-submit');
+            })
+        }, 'fork-form', 'fork-submit');
     }
 }
 

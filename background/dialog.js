@@ -5,10 +5,10 @@ export default {
     async open(message) {
         const win = await browser.windows.create({
             allowScriptsToClose: true,
-            type: 'panel',
+            type: 'popup',
             url: `/dialog.html#${JSON.stringify(message)}`,
             width: 500,
-            height: 250,
+            height: 400,
         });        
         return new Promise((resolve, reject) => {
             const onWindowRemoved = (windowId) => {
