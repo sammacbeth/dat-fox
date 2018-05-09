@@ -47,6 +47,7 @@ const handlers = {
     resolveName: (message) => datApis.DatArchive.resolveName(message.name),
     addDatSite: (message) => addDatSite(message.host),
     create: (message) => dialog.open(message),
+    fork: (message) => dialog.open(message),
     dialogResponse: (message) => dialog.onMessage(message),
 };
 

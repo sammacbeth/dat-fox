@@ -90,7 +90,7 @@ export default function(rpc) {
         }
 
         async getInfo(opts) {
-            return rpc.postMessage({ action: 'getInfo', url: this.url, opts: { timeout: 30000 } });
+            return rpc.postMessage({ action: 'getInfo', url: this.url, opts });
         }
 
         async stat(path, opts) {
