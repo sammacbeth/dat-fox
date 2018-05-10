@@ -4,10 +4,11 @@
   "description": "A Webextension for the dat:// protocol",
   "main": "background.js",
   "scripts": {
+    "postinstall": "cp node_modules/bootstrap/dist/css/bootstrap.css addon/assets/",
     "build": "webpack",
     "serve": "webpack -w",
     "package": "webpack && web-ext build -s addon",
-    "lint": "eslint background/"
+    "lint": "eslint background/ common/ dialog/ popup/ window/"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,9 @@
     "url": "https://github.com/sammacbeth/dat-fox/issues"
   },
   "homepage": "https://github.com/sammacbeth/dat-fox#readme",
-  "dependencies": {},
+  "dependencies": {
+    "bootstrap": "4.1.1"
+  },
   "devDependencies": {
     "eslint": "^4.19.1",
     "web-ext": "^2.6.0",

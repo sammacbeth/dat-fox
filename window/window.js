@@ -1,3 +1,4 @@
+/* global _datfoxPostMessage, _datfoxAddListener */
 import createDatArchiveApi from '../common/dat-archive-rpc';
 
 (function (window) {
@@ -14,11 +15,11 @@ import createDatArchiveApi from '../common/dat-archive-rpc';
             });
             _datfoxPostMessage(message);
         });
-    };
+    }
 
     _datfoxAddListener((responseJSON) => {
         const response = JSON.parse(responseJSON);
-        console.log("Received: ", response);
+        console.log('Received: ', response);
         if (waitingForResponse.has(response.id)) {
             const { resolve, reject } = waitingForResponse.get(response.id);
             waitingForResponse.delete(response.id);

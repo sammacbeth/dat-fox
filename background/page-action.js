@@ -27,6 +27,7 @@ export function showDatSecureIcon(tabId) {
         tabId,
         title: 'Secure Dat Site',
     });
+    browser.pageAction.setPopup({ tabId, popup: 'popup/popup.html' });
     browser.pageAction.show(tabId);
 }
 
@@ -39,6 +40,7 @@ export function showDatAvailableIcon(tabId) {
         tabId,
         title: 'Dat Version Available',
     });
+    browser.pageAction.setPopup({ tabId, popup: '' });
     browser.pageAction.show(tabId);
 }
 

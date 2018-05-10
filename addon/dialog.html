@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Create Dat</title>
+        <link rel="stylesheet" href="assets/bootstrap.css" />
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col" id="create" style="display: none;">
+                    <h2>Create a new Dat site</h2>
+                    <form id="create-form">
+                        <div class="form-group">
+                            <label for="create-title">Title:</label>
+                            <input class="form-control" id="create-title" placeholder="Title"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="create-desc">Description:</label>
+                            <input class="form-control" id="create-desc" placeholder="Description (optional)"/>
+                        </div>
+                        <button class="btn btn-secondary cancel">Cancel</button>
+                        <button class="btn btn-primary" type="submit" id="create-submit">Create Site</button>
+                    </form>
+                </div>
+                <div class="col" id="fork" style="display: none;">
+                    <h2 id="fork-message">Fork Dat</h2>
+                    <p id="fork-url">dat://</p>
+                    <form id="fork-form">
+                        <div class="form-group">
+                            <label for="fork-title">Title:</label>
+                            <input class="form-control" id="fork-title" placeholder="Title"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="fork-desc">Description:</label>
+                            <input class="form-control" id="fork-desc" placeholder="Description (optional)"/>
+                        </div>
+                        <button class="btn btn-secondary cancel">Cancel</button>
+                        <button class="btn btn-primary" type="submit" id="fork-submit">Create Fork</button>
+                    </form>
+                </div>
+                <div class="col" id="selectArchive" style="display: none;">
+                    <h2>Select an archive from your library</h2>
+                    <div class="list-group" id="archives">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="./dialog.js"></script>    
+</html>
