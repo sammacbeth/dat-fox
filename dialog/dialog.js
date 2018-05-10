@@ -81,15 +81,15 @@ async function setupForm() {
             title.setAttribute('disabled', true);
             desc.setAttribute('disabled', true);
             return DatArchive.fork(message.url, {
-                title: title.getAttribute('value'),
-                desc: desc.getAttribute('value'),
+                title: title.value,
+                description: desc.value,
             }).then((archive) => {
                 port.postMessage({
                     action: 'dialogResponse',
                     dialogId: id,
                     result: archive.url,
                 });
-            })
+            });
         }, 'fork-form', 'fork-submit');
     } else if (action === "selectArchive") {
         const library = await bridge.postMessage({ action: 'listLibrary' });
