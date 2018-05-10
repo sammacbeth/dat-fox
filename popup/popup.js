@@ -11,7 +11,14 @@ async function getTab() {
 getTab().then(async (tab) => {
     console.log(tab);
     const archive = new DatArchive(tab.url);
-    const { title, description, peers } = await archive.getInfo();
-    const div = document.getElementById('content');
-    div.innerHTML = `<h2>${title || ''}</h2><p>${description || ''}</p><p>Peers: ${peers}</p>`;
+    const { title, description, peers, isOwner } = await archive.getInfo();
+    document.getElementById('title').innerText = title || '';
+    document.getElementById('description').innerText = description || '';
+    document.getElementById('peers').innerText = `Peers: ${peers}`;
+    document.getElementById('fork-button').onclick = async () => {
+        const forkedArchive = await DatArchive.fork(archive.url, {});
+        browser.tabs.update(tab.id, {
+            url: forkedArchive.url,
+        });
+    }
 });
