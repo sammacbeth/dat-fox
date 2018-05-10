@@ -39,4 +39,4 @@ export default {
         dialogs.delete(dialogId);
         return Promise.resolve();
     }
-}
+};

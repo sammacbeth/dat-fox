@@ -22,7 +22,7 @@ Array.prototype.forEach.call(document.getElementsByClassName('cancel'), (btn) =>
             dialogId: id,
             error: 'User aborted',
         });
-    }
+    };
 });
 
 function onSubmit(cb, formId, buttonId) {
@@ -53,7 +53,6 @@ async function setupForm() {
         const desc = document.getElementById('create-desc');
         title.setAttribute('value', opts.title || '');
         desc.setAttribute('value', opts.description || '');
-        let submitted = false;
         onSubmit(() => 
             DatArchive.create({
                 title: title.getAttribute('value'),
@@ -91,10 +90,10 @@ async function setupForm() {
                 });
             });
         }, 'fork-form', 'fork-submit');
-    } else if (action === "selectArchive") {
+    } else if (action === 'selectArchive') {
         const library = await bridge.postMessage({ action: 'listLibrary' });
         const archiveList = document.getElementById('archives');
-        library.forEach(async ({ url, dir, owner }) => {
+        library.forEach(async ({ url, dir }) => {
             const archive = new DatArchive(url);
             const { title, description } = await archive.getInfo();
             const template = document.createElement('template');

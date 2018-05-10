@@ -8,7 +8,7 @@
     "build": "webpack",
     "serve": "webpack -w",
     "package": "webpack && web-ext build -s addon",
-    "lint": "eslint background/"
+    "lint": "eslint background/ common/ dialog/ popup/ window/"
   },
   "repository": {
     "type": "git",

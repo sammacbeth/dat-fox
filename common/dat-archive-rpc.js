@@ -13,13 +13,13 @@ export default function(rpc) {
                 this.listeners[event] = [fn];
                 this.getId.then(id => {
                     this._runloop(id, event);
-                })
+                });
             } else {
                 this.listeners[event].push(fn);
             }
         }
 
-       _runloop(streamId, event) {
+        _runloop(streamId, event) {
             if (this.closed) {
                 return Promise.resolve();
             }
@@ -175,29 +175,29 @@ export default function(rpc) {
             });
         }
 
-         async revert() {
+        async revert() {
             return rpc.postMessage({
                 action: 'revert',
                 url: this.url,
             });
-         }
+        }
 
-         async history(opts) {
+        async history(opts) {
             return rpc.postMessage({
                 action: 'history',
                 url: this.url,
                 opts,
             });
-         }
+        }
 
-         async download(path, opts) {
+        async download(path, opts) {
             return rpc.postMessage({
                 action: 'download',
                 url: this.url,
                 path,
                 opts,
             });
-         }
+        }
 
         createFileActivityStream(pattern) {
             return new ActivityStream(rpc.postMessage({
@@ -205,13 +205,13 @@ export default function(rpc) {
                 url: this.url,
                 pattern,
             }));
-         }
+        }
 
         createNetworkActivityStream() {
             return new ActivityStream(rpc.postMessage({
                 action: 'createNetworkActivityStream',
                 url: this.url,
             }));
-         }
-    }
+        }
+    };
 }
