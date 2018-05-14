@@ -35,6 +35,18 @@ bridge.connect().then(() => {
         .forEach((action) => {
             passthroughActions.add(action);
         });
+    // manage open archives
+    setInterval(async () => {
+        const library = new Set((await bridge.postMessage({ action: 'listLibrary' })).map(({ url }) => url));
+        const archives = await bridge.postMessage({ action: 'getOpenArchives' });
+        // 5 mins inactivity -> close
+        const ageCutoff = Date.now() - (5 * 60 * 1000);
+        const closeArchives = archives.filter(({ url, lastUsed }) => !library.has(url) && lastUsed < ageCutoff);
+        if (closeArchives.length > 0) {
+            console.log('closing dats:', closeArchives.map(({ url }) => url));
+            await closeArchives.map(({ url }) => bridge.postMessage({ action: 'closeArchive', url }));
+        }
+    }, 60000);
 }, (e) => {
     console.log('bridge loading failed, using local Dat API implementation', e);
 });
