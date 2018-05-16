@@ -3,7 +3,7 @@
     "description": "Makes the dat:// protocol available",
     "manifest_version": 2,
     "name": "Dat P2P Protocol",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "applications": {
         "gecko": {
             "id": "{e992d888-6346-4e09-98b5-8c61307970e6}",
