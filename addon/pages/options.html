@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../assets/bootstrap.css" />
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="row" id="manual address">
+                <div class="col">
+                    <h3>Actions:</h3>
+                    <ul>
+                        <li><a href="./setup.html" target="_blank">Open setup page</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" id="manual address">
+                <div class="col">
+                    <h3>Settings:</h3>
+                    <form id="options">
+                        <div class="form-group">
+                            <label for="address">Dat gateway Address</label>
+                            <input class="form-control"
+                                type="URI" 
+                                id="address" 
+                                value="http://localhost:3000" 
+                                required pattern="https?:\/\/[^/\?:]+(:[0-9]+)?" />
+                        </div>
+                        <button class="btn btn-primary" type="submit" >Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="./options.js"></script>
+</html>

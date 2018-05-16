@@ -4,6 +4,7 @@ export default class {
     constructor() {
         this.messageIdx = 0;
         this.waitingForResponse = new Map();
+        this.connected = false;
     }
 
     connect() {
@@ -18,6 +19,7 @@ export default class {
             };
             const timer = setTimeout(() => {
                 this.port.onDisconnect.removeListener(disconnectListener);
+                this.connected = true;
                 resolve();
             }, 2000);
             this.port.onDisconnect.addListener(disconnectListener);
@@ -45,5 +47,10 @@ export default class {
             });
             this.port.postMessage(message);
         });
+    }
+
+    disconnect() {
+        this.connected = false;
+        this.port.disconnect();
     }
 }

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../assets/bootstrap.css" />
+        <title>Dat-fox Setup</title>
+    </head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Dat-fox: Dat + Firefox</h1>
+                <p>
+                    You're almost ready to browse Dat, but first we need to make sure
+                    everything is setup.
+                </p>
+                <p>If you didn't already, you need to install the dat-fox helper:</p>
+                <ul>
+                    <li>Mac/Linux: <code><kdb>curl -o- https://raw.githubusercontent.com/sammacbeth/dat-fox-helper/master/installer.sh | bash</kdb></code></li>
+                    <li>Windows: <a href="https://datfox-sammacbeth.hashbase.io/how-to-install-dat-fox-helper">Manual install instructions.</a></li>
+                </ul>
+                <p>
+                    Once dat-fox-helper is installed, click below to test that your browser
+                    can communicate with the helper process.
+                </p>
+                <button class="btn btn-primary" id="test">Test</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" id="test-results">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col invisible" id="ready-to-go">
+                <h3>Check Dat out!</h3>
+                <p>
+                    Now you're ready to browse the P2P web! Here's some sites to get you
+                    started:
+                </p>
+                <ul>
+                    <li>
+                        <a href="dat://datfox-sammacbeth.hashbase.io/">The dat-fox blog</a> published
+                        with orkl.
+                    </li>
+                    <li>
+                        Publish your own p2p blog with <a href="dat://orkl-kodedninja.hashbase.io/">orkl</a>,
+                        <a href="dat://solo-kodedninja.hashbase.io">solo</a> or 
+                        <a href="dat://pipette-dev-blog-jimpick.hashbase.io/post/introducing-pipette/">Pipette</a>.
+                        Hit the fork button via the green Dat icon in the url bar.
+                    </li>
+                    <li>
+                        Edit any Dats you create in the browser, with <a href="dat://editor-cryptic.hashbase.io/">this editor</a>.
+                    </li>
+                    <li>
+                        And more... A more comprehensive list of dat sites is available from
+                        the <a href="dat://beakerbrowser.com">Beaker Browser</a> team on <a href="https://github.com/beakerbrowser/explore">Github</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="./setup.js"></script>
+</body>
+</html>
