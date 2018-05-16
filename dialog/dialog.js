@@ -55,8 +55,8 @@ async function setupForm() {
         desc.setAttribute('value', opts.description || '');
         onSubmit(() => 
             DatArchive.create({
-                title: title.getAttribute('value'),
-                desc: desc.getAttribute('value'),
+                title: title.value,
+                desc: desc.value,
             }).then((archive) => {
                 port.postMessage({
                     action: 'dialogResponse',
