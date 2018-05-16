@@ -10,14 +10,7 @@ It aims to implement native-like dat support possible in Firefox. This means:
 
 ## Usage
 
-1. Grab [this fork of dat-gateway](https://github.com/sammacbeth/dat-gateway) and run it:
-
-   ```bash
-   git clone https://github.com/sammacbeth/dat-gateway.git
-   cd dat-gateway
-   npm install
-   ./bin.js
-   ```
+1. Install [dat-fox-helper](https://github.com/sammacbeth/dat-fox-helper)
    
 2. Install the extension from the [Mozilla Addon Store](https://addons.mozilla.org/en-US/firefox/addon/dat-p2p-protocol/)
 
@@ -50,16 +43,11 @@ You can now load the `addon` folder as a temporary addon in Firefox:
    * `http://{hash}`
    * `dat://{hostname}` (using [Dat Discovery](https://github.com/beakerbrowser/beaker/wiki/Authenticated-Dat-URLs-and-HTTPS-to-Dat-Discovery))
 * Toggle between `https` to `dat` protocol for Dat-enabled sites.
-
-## What does not work
-
-Due to limitations in the WebExtensions protocol handler API, non main-frame `dat://` urls do not load. For static resources we can circumvent this by rewriting `dat://` to `http://` in HTML files using a [StreamFilter](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest/StreamFilter). However, dynamically generated requests will fail.
-
-Any Dat site which relies on the [DatArchive](https://beakerbrowser.com/docs/apis/dat.html) will not work.
+* Create and fork archives.
+* `DatArchive` [API](https://beakerbrowser.com/docs/apis/dat.html)
 
 ## How it works
 
 1. The [protocol handler](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/protocol_handlers) redirects `dat://` urls to a special handler domain (`dat.redirect`), passing the full url.
 2. A [webRequest](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/webRequest) listener intercepts requests to this domain and redirects to a `http://` URL with the dat key or hostname as the origin.
 3. A [proxy PAC](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/proxy) file intercepts hostnames matching a dat key pattern, or hostnames the user has explicitly ask to load over dat. Requests for these URLs are proxied via the dat-gateway (acting as a HTTP proxy). This allows us to make 'fake' hostnames work, and create the origins we need for dat sites.
-
