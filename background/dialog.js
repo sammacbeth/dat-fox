@@ -6,7 +6,7 @@ export default {
         const win = await browser.windows.create({
             allowScriptsToClose: true,
             type: 'popup',
-            url: `/dialog.html#${JSON.stringify(message)}`,
+            url: `/pages/dialog.html#${JSON.stringify(message)}`,
             width: 500,
             height: 400,
         });        

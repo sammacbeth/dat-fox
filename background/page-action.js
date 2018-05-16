@@ -27,7 +27,7 @@ export function showDatSecureIcon(tabId) {
         tabId,
         title: 'Secure Dat Site',
     });
-    browser.pageAction.setPopup({ tabId, popup: 'popup/popup.html' });
+    browser.pageAction.setPopup({ tabId, popup: 'pages/popup.html' });
     browser.pageAction.show(tabId);
 }
 

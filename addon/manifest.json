@@ -36,7 +36,7 @@
         "default_icon": "assets/dat-hexagon.svg"
     },
     "options_ui": {
-        "page": "options_page/options.html",
-        "browser_style": true
+        "page": "pages/options.html",
+        "browser_style": false
     }
 }
