@@ -18,16 +18,19 @@ proxyReady.then(() => {
 
 const bridge = new NativeBridge();
 global.bridge = bridge;
-bridge.connect().then(() => {
+global.resetBridge = async () => {
+    if (bridge.connected) {
+        bridge.disconnect();
+    }
+    await bridge.connect();
     console.log('bridge is ready');
     useNativeBridge(bridge);
     const port = 3000 + Math.floor(Math.random() * 500);
-    bridge.postMessage({
+    await bridge.postMessage({
         action: 'startGateway',
         port: port,
-    }).then(() => {
-        setGatewayAddress(`http://localhost:${port}`);
-    }, (e) => console.error('error starting gateway', e));
+    });
+    setGatewayAddress(`http://localhost:${port}`);
     // add actions which the helper API supports
     ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile', 'writeFile', 'mkdir', 
         'unlink', 'rmdir', 'diff', 'commit', 'revert', 'download', 'createFileActivityStream',
@@ -47,9 +50,15 @@ bridge.connect().then(() => {
             await closeArchives.map(({ url }) => bridge.postMessage({ action: 'closeArchive', url }));
         }
     }, 60000);
-}, (e) => {
+    return port;
+};
+
+global.resetBridge().catch((e) => {
     console.log('bridge loading failed, using local Dat API implementation', e);
+    console.log('opening setup page');
+    browser.tabs.create({ url: browser.extension.getURL('setup.html')});
 });
+
 
 // actions in this set are forwarded to the native bridge
 const passthroughActions = new Set();
