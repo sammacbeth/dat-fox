@@ -56,7 +56,7 @@ global.resetBridge = async () => {
 global.resetBridge().catch((e) => {
     console.log('bridge loading failed, using local Dat API implementation', e);
     console.log('opening setup page');
-    browser.tabs.create({ url: browser.extension.getURL('setup.html')});
+    browser.tabs.create({ url: browser.extension.getURL('pages/setup.html')});
 });
 
 
