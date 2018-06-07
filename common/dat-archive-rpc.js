@@ -70,7 +70,8 @@ export default function(rpc) {
         constructor(datUrl) {
             // in some cases a http url might be passed here
             // (e.g. if document.location is used by the page)
-            this.url = datUrl.replace('http://', 'dat://');
+            const [,, address] = datUrl.split('/');
+            this.url = `dat://${address}`;
         }
 
         static async create(opts) {
