@@ -58,11 +58,11 @@ export default function(rpc) {
         }
 
         isDirectory() {
-            this._isDirectory;
+            return this._isDirectory;
         }
 
         isFile() {
-            this._isFile;
+            return this._isFile;
         }
     }
 
