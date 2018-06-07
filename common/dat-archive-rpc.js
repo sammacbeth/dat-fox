@@ -1,3 +1,4 @@
+import base64js from 'base64-js';
 
 export default function(rpc) {
 
@@ -105,6 +106,13 @@ export default function(rpc) {
         }
 
         async readFile(path, opts) {
+            if (opts && opts.encoding === 'binary') {
+                // use base64 and then convert back to binary here
+                const optsCopy = Object.assign({}, opts);
+                optsCopy.encoding = 'base64';
+                const b64Contents = await this.readFile(path, optsCopy);
+                return base64js.toByteArray(b64Contents).buffer;
+            }
             return rpc.postMessage({
                 action: 'readFile',
                 url: this.url,
@@ -127,6 +135,12 @@ export default function(rpc) {
         }
 
         async writeFile(path, data, opts) {
+            if ((opts && opts.encoding === 'binary') || data instanceof ArrayBuffer) {
+                // convert binary to base64 and write that instead
+                const optsCopy = Object.assign({}, opts);
+                optsCopy.encoding = 'base64';
+                return this.writeFile(path, base64js.fromByteArray(new Uint8Array(data)), optsCopy);
+            }
             return rpc.postMessage({
                 action: 'writeFile',
                 url: this.url,
