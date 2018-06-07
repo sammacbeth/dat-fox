@@ -95,6 +95,20 @@ export default function(rpc) {
             return rpc.postMessage({ action: 'getInfo', url: this.url, opts });
         }
 
+        async configure(opts) {
+            return rpc.postMessage({ action: 'configure', url: this.url, opts });
+        }
+
+        async copy(path, dstPath, opts) {
+            return rpc.postMessage({
+                action: 'copy',
+                url: this.url,
+                path,
+                dstPath,
+                opts
+            });
+        }
+
         async stat(path, opts) {
             const stat = await rpc.postMessage({
                 action: 'stat',
@@ -171,6 +185,16 @@ export default function(rpc) {
                 action: 'rmdir',
                 url: this.url,
                 path,
+                opts,
+            });
+        }
+
+        async rename(oldPath, newPath, opts) {
+            return rpc.postMessage({
+                action: 'rename',
+                url: this.url,
+                oldPath,
+                newPath,
                 opts,
             });
         }
