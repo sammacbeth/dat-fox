@@ -1,5 +1,6 @@
 /* global _datfoxPostMessage, _datfoxAddListener */
 import createDatArchiveApi from '../common/dat-archive-rpc';
+import urlParse from 'url-parse';
 
 (function (window) {
     let messageIdx = 0;
@@ -32,5 +33,7 @@ import createDatArchiveApi from '../common/dat-archive-rpc';
     });
 
     window.DatArchive = createDatArchiveApi({ postMessage });
+
+    window.URL = urlParse;
 
 })(window);
