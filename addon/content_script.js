@@ -35,6 +35,14 @@ scriptTag.parentNode.removeChild(scriptTag);
     scriptTag.src = e.src.replace('dat://', 'http://');
     e.parentNode.appendChild(scriptTag);
 });
-[...document.images]
-.filter(e => e.src.startsWith('dat://'))
-.forEach(e => e.src = e.src.replace('dat://', 'http://'));
+
+function rewriteDatImageUrls() {
+    [...document.images]
+    .filter(e => e.src.startsWith('dat://'))
+    .forEach(e => e.src = e.src.replace('dat://', 'http://'));
+}
+
+rewriteDatImageUrls();
+// rewrite images on the fly
+const observer = new MutationObserver(rewriteDatImageUrls);
+observer.observe(document.body, { childList:true, subtree:true });
