@@ -79,8 +79,8 @@ browser.runtime.onConnect.addListener((port) => {
         const { id, action } = message;
         if (passthroughActions.has(action)) {
             bridge.postMessage(message).then(
-                result => ({ id, result }),
-                error => ({ id, error })
+                result => ({ id, action, result }),
+                error => ({ id, action, error })
             ).then(response => {
                 port.postMessage(response);
             });
