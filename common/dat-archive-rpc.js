@@ -24,13 +24,14 @@ export default function(rpc) {
             if (this.closed) {
                 return Promise.resolve();
             }
+            const listeners = this.listeners[event];
             rpc.postMessage({
                 action: 'pollActivityStream',
                 streamId,
                 event,
             }).then((events) => {
                 events.forEach((evt) => {
-                    this.listeners[event].forEach((fn) => {
+                    listeners.forEach((fn) => {
                         try {
                             fn(evt);
                         } catch(e) {
@@ -72,6 +73,9 @@ export default function(rpc) {
             // in some cases a http url might be passed here
             // (e.g. if document.location is used by the page)
             const [,, address] = datUrl.split('/');
+            if (!address) {
+                throw 'Invalid dat:// URL';
+            }
             this.url = `dat://${address}`;
         }
 
@@ -236,6 +240,10 @@ export default function(rpc) {
                 path,
                 opts,
             });
+        }
+
+        watch(pattern) {
+            return this.createFileActivityStream(pattern);
         }
 
         createFileActivityStream(pattern) {
