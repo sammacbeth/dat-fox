@@ -1,4 +1,5 @@
 import base64js from 'base64-js';
+import urlParse from 'url-parse';
 
 export default function(rpc) {
 
@@ -68,15 +69,25 @@ export default function(rpc) {
         }
     }
 
+    function cleanPath(path) {
+        // standardise path format across platforms
+        // replace windows style separators with unix
+        const cleanedPath = path.replace(/\\/g, '/');
+        if (cleanedPath.startsWith('/')) {
+            return cleanedPath.substring(1);
+        }
+        return cleanedPath;
+    }
+
     return class DatArchive {
         constructor(datUrl) {
             // in some cases a http url might be passed here
             // (e.g. if document.location is used by the page)
-            const [,, address] = datUrl.split('/');
-            if (!address) {
+            const parts = urlParse(datUrl);
+            if (!parts.host) {
                 throw 'Invalid dat:// URL';
             }
-            this.url = `dat://${address}`;
+            this.url = `dat://${parts.host}`;
         }
 
         static async create(opts) {
@@ -147,9 +158,9 @@ export default function(rpc) {
                 opts,
             });
             if (opts && opts.stat) {
-                return dir.map(({ name, stat }) => ({ name, stat: new Stat(stat)}));
+                return dir.map(({ name, stat }) => ({ name: cleanPath(name), stat: new Stat(stat)}));
             }
-            return dir;
+            return dir.map(cleanPath);
         }
 
         async writeFile(path, data, opts) {
