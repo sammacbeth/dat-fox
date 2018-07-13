@@ -1,36 +1,36 @@
 /**
  * Sets up redirects for dat:// urls to be proxied.
  */
+import mime from 'mime';
 import { addDatSite, datSites } from './sites';
 import { showDatSecureIcon } from './page-action';
 
 const datUrlMatcher = /^[0-9a-f]{64}(\+[0-9]+)?$/;
 
 function init() {
-    /*
-    * Listen for requests to a fake redirect host (dat.localhost), and redirect to a url which will be
-    * proxied to the dat-gateway.
-    */
-    browser.webRequest.onBeforeRequest.addListener((details) => {
-        // replace url encoded dat:// prefix
-        const datUrl = decodeURIComponent(details.url.replace('http://dat.localhost/?dat%3A%2F%2F', ''));
-        const hostOrAddress = datUrl.split('/')[0];
-
-        // if its a plain dat url, just do the redirect
-        if (datUrlMatcher.test(hostOrAddress)) {
-            return {
-                redirectUrl: `http://${datUrl}`,
-            };
+    browser.protocol.registerProtocol('dat', async (request) => {
+        const url = request.url.replace('dat://', 'http://');
+        const path = url.split('?')[0];
+        let contentType = mime.getType(path);
+        if (path.endsWith('/')) {
+            contentType = 'text/html';
         }
-        // otherwise, we need to add this hostname to the list of dat sites
-        // TODO this will trigger a race condition
-        addDatSite(hostOrAddress);
+        console.log('xxx', url, contentType);
         return {
-            redirectUrl: `http://${datUrl}`,
+            contentType,
+            content: (async function*() {
+                const contentBlob = await (await fetch(url)).blob();
+                const buffer = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        resolve(reader.result);
+                    }
+                    reader.readAsArrayBuffer(contentBlob);
+                });
+                yield buffer;
+            })()
         };
-    }, {
-        urls: ['http://dat.localhost/*'],
-    }, ['blocking']);
+    });
 
     // trigger dat secure page action for dat pages
     browser.tabs.onUpdated.addListener((tabId, changeInfo) => {

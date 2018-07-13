@@ -25,11 +25,22 @@
         "storage",
         "nativeMessaging"
     ],
-    "protocol_handlers": [{
-        "protocol": "dat",
-        "name": "Dat",
-        "uriTemplate": "http://dat.localhost/?%s"
-    }],
+    "experiment_apis": {
+        "protocol": {
+            "schema": "../../libdweb/src/protocol/protocol.json",
+            "child": {
+                "scopes": ["addon_child"],
+                "paths": [["protocol"]],
+                "script": "../../libdweb/src/protocol/client.js"
+            },
+            "parent": {
+                "events": ["startup"],
+                "scopes": ["addon_parent"],
+                "paths": [["protocol"]],
+                "script": "../../libdweb/src/protocol/host.js"
+            }
+        }
+    },
     "page_action": {
         "browser_style": true,
         "default_title": "Dat",
