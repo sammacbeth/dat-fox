@@ -8,7 +8,8 @@
     "build": "webpack",
     "serve": "webpack -w",
     "package": "webpack && web-ext build -s addon",
-    "lint": "eslint background/ common/ dialog/ popup/ window/"
+    "lint": "eslint background/ common/ dialog/ popup/ window/",
+    "run": "cross-env MOZ_DISABLE_CONTENT_SANDBOX=1 web-ext run -s addon --firefox=firefoxdeveloperedition"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,8 @@
     "bootstrap": "4.1.1",
     "spanan": "2.1.0",
     "url-parse": "^1.4.3",
-    "mime": "^2.3.1"
+    "mime": "^2.3.1",
+    "cross-env": "^5.2.0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
