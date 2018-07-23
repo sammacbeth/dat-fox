@@ -1,7 +1,7 @@
 import createDatArchiveApi from '../common/dat-archive-rpc';
 
 const bridge = browser.extension.getBackgroundPage().bridge;
-const DatArchive = createDatArchiveApi(bridge);
+const DatArchive = createDatArchiveApi(bridge.api);
 
 async function getTab() {
     const tabs = await browser.tabs.query({active: true, currentWindow: true});
@@ -19,7 +19,7 @@ getTab().then(async (tab) => {
     const actionsElem = document.getElementById('actions');
     if (isOwner) {
         // View local files button - opens the file url for the dat folder on the local system
-        const library = await bridge.postMessage({ action: 'listLibrary' });
+        const library = await bridge.api.listLibrary();
         const [,, datAddr] = archive.url.split('/');
         const libraryEntry = library.find(({ url }) => url === `dat://${datAddr}`);
         if (libraryEntry) {

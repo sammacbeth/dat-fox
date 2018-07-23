@@ -8,16 +8,16 @@ function postMessage(message) {
 const listeners = [];
 
 port.onMessage.addListener((response) => {
-    listeners.forEach(fn => fn(JSON.stringify(response)));
+    response.source = 'datfox-api-response';
+    window.postMessage(response, '*');
 });
 
-function addListener(fn) {
-    listeners.push(fn)
-}
-
-// expose communication channel to background for datArchive API
-exportFunction(postMessage, window, { defineAs: '_datfoxPostMessage' });
-exportFunction(addListener, window, { defineAs: '_datfoxAddListener' });
+window.addEventListener('message', (event) => {
+    if (event.source === window && event.data && 
+            event.data.source === 'datfox-api') {
+        port.postMessage(event.data);
+    }
+});
 
 // inject datArchive script into the page
 const scriptTag = document.createElement('script');

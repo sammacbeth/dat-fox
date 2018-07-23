@@ -1,7 +1,7 @@
 import createDatArchiveApi from '../common/dat-archive-rpc';
 
 const { bridge } = browser.extension.getBackgroundPage();
-const DatArchive = createDatArchiveApi(bridge);
+const DatArchive = createDatArchiveApi(bridge.api);
 const port = browser.runtime.connect();
 
 // read options for dialog from url

@@ -24,12 +24,9 @@ global.resetBridge = async () => {
     }
     await bridge.connect();
     console.log('bridge is ready');
-    useNativeBridge(bridge);
+    useNativeBridge(bridge.api);
     const port = 3000 + Math.floor(Math.random() * 500);
-    await bridge.postMessage({
-        action: 'startGateway',
-        port: port,
-    });
+    await bridge.api.startGateway({ port });
     setGatewayAddress(`http://localhost:${port}`);
     // add actions which the helper API supports
     ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile', 'writeFile', 'mkdir', 
@@ -41,14 +38,14 @@ global.resetBridge = async () => {
         });
     // manage open archives
     setInterval(async () => {
-        const library = new Set((await bridge.postMessage({ action: 'listLibrary' })).map(({ url }) => url));
-        const archives = await bridge.postMessage({ action: 'getOpenArchives' });
+        const library = new Set((await bridge.api.listLibrary()).map(({ url }) => url));
+        const archives = await bridge.api.getOpenArchives();
         // 5 mins inactivity -> close
         const ageCutoff = Date.now() - (5 * 60 * 1000);
         const closeArchives = archives.filter(({ url, lastUsed }) => !library.has(url) && lastUsed < ageCutoff);
         if (closeArchives.length > 0) {
             console.log('closing dats:', closeArchives.map(({ url }) => url));
-            await closeArchives.map(({ url }) => bridge.postMessage({ action: 'closeArchive', url }));
+            await closeArchives.map(({ url }) => bridge.api.closeArchive({ url }));
         }
     }, 60000);
     return port;
@@ -76,31 +73,31 @@ const handlers = {
 
 browser.runtime.onConnect.addListener((port) => {
     port.onMessage.addListener((message) => {
-        const { id, action } = message;
+        const { uuid, action, args } = message;
         if (passthroughActions.has(action)) {
-            bridge.postMessage(message).then(
-                result => ({ id, action, result }),
-                error => ({ id, action, error })
+            bridge.api[action](...args).then(
+                response => ({ uuid, action, response }),
+                error => ({ uuid, action, error })
             ).then(response => {
                 port.postMessage(response);
             });
         } else if (handlers[action]) {
-            handlers[action](message).then((result) => {
+            handlers[action](message).then((response) => {
                 port.postMessage({
-                    id,
+                    uuid,
                     action,
-                    result,
+                    response,
                 });
             }, (error) => {
                 port.postMessage({
-                    id,
+                    uuid,
                     action,
                     error: error,
                 });
             });
         } else {
             port.postMessage({
-                id,
+                uuid,
                 error: 'unsupported action',
             });
         }

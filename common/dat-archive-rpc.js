@@ -26,8 +26,7 @@ export default function(rpc) {
                 return Promise.resolve();
             }
             const listeners = this.listeners[event];
-            rpc.postMessage({
-                action: 'pollActivityStream',
+            rpc.pollActivityStream({
                 streamId,
                 event,
             }).then((events) => {
@@ -47,8 +46,7 @@ export default function(rpc) {
             this.closed = true;
             this.listeners = {};
             this.getId.then(streamId => {
-                rpc.postMessage({
-                    action: 'closeActivityStream',
+                rpc.closeActivityStream({
                     streamId,
                 });
             });
@@ -91,32 +89,31 @@ export default function(rpc) {
         }
 
         static async create(opts) {
-            return rpc.postMessage({ action: 'create', opts }).then(url => new DatArchive(url));
+            return rpc.create({ opts }).then(url => new DatArchive(url));
         }
 
         static async fork(url, opts) {
-            return rpc.postMessage({ action: 'fork', url, opts }).then(url => new DatArchive(url));
+            return rpc.fork({ url, opts }).then(url => new DatArchive(url));
         }
 
         static async selectArchive(opts) {
-            return rpc.postMessage({ action: 'selectArchive', opts }).then(url => new DatArchive(url));
+            return rpc.selectArchive({ opts }).then(url => new DatArchive(url));
         }
 
         static async resolveName(name) {
-            return rpc.postMessage({ action: 'resolveName', name });
+            return rpc.resolveName({ name });
         }
 
         async getInfo(opts) {
-            return rpc.postMessage({ action: 'getInfo', url: this.url, opts });
+            return rpc.getInfo({ url: this.url, opts });
         }
 
         async configure(opts) {
-            return rpc.postMessage({ action: 'configure', url: this.url, opts });
+            return rpc.configure({ url: this.url, opts });
         }
 
         async copy(path, dstPath, opts) {
-            return rpc.postMessage({
-                action: 'copy',
+            return rpc.copy({
                 url: this.url,
                 path,
                 dstPath,
@@ -125,8 +122,7 @@ export default function(rpc) {
         }
 
         async stat(path, opts) {
-            const stat = await rpc.postMessage({
-                action: 'stat',
+            const stat = await rpc.stat({
                 url: this.url,
                 path,
                 opts,
@@ -142,8 +138,7 @@ export default function(rpc) {
                 const b64Contents = await this.readFile(path, optsCopy);
                 return base64js.toByteArray(b64Contents).buffer;
             }
-            return rpc.postMessage({
-                action: 'readFile',
+            return rpc.readFile({
                 url: this.url,
                 path,
                 opts,
@@ -151,8 +146,7 @@ export default function(rpc) {
         }
 
         async readdir(path, opts) {
-            const dir = await rpc.postMessage({
-                action: 'readdir',
+            const dir = await rpc.readdir({
                 url: this.url,
                 path,
                 opts,
@@ -170,8 +164,7 @@ export default function(rpc) {
                 optsCopy.encoding = 'base64';
                 return this.writeFile(path, base64js.fromByteArray(new Uint8Array(data)), optsCopy);
             }
-            return rpc.postMessage({
-                action: 'writeFile',
+            return rpc.writeFile({
                 url: this.url,
                 path,
                 data,
@@ -180,24 +173,21 @@ export default function(rpc) {
         }
 
         async mkdir(path) {
-            return rpc.postMessage({
-                action: 'mkdir',
+            return rpc.mkdir({
                 url: this.url,
                 path,
             });
         }
 
         async unlink(path) {
-            return rpc.postMessage({
-                action: 'unlink',
+            return rpc.unlink({
                 url: this.url,
                 path,
             });
         }
 
         async rmdir(path, opts) {
-            return rpc.postMessage({
-                action: 'rmdir',
+            return rpc.rmdir({
                 url: this.url,
                 path,
                 opts,
@@ -205,8 +195,7 @@ export default function(rpc) {
         }
 
         async rename(oldPath, newPath, opts) {
-            return rpc.postMessage({
-                action: 'rename',
+            return rpc.rename({
                 url: this.url,
                 oldPath,
                 newPath,
@@ -215,38 +204,33 @@ export default function(rpc) {
         }
 
         async diff(opts) {
-            return rpc.postMessage({
-                action: 'diff',
+            return rpc.diff({
                 url: this.url,
                 opts,
             });
         }
 
         async commit() {
-            return rpc.postMessage({
-                action: 'commit',
+            return rpc.commit({
                 url: this.url,
             });
         }
 
         async revert() {
-            return rpc.postMessage({
-                action: 'revert',
+            return rpc.revert({
                 url: this.url,
             });
         }
 
         async history(opts) {
-            return rpc.postMessage({
-                action: 'history',
+            return rpc.history({
                 url: this.url,
                 opts,
             });
         }
 
         async download(path, opts) {
-            return rpc.postMessage({
-                action: 'download',
+            return rpc.download({
                 url: this.url,
                 path,
                 opts,
@@ -258,16 +242,14 @@ export default function(rpc) {
         }
 
         createFileActivityStream(pattern) {
-            return new ActivityStream(rpc.postMessage({
-                action: 'createFileActivityStream',
+            return new ActivityStream(rpc.createFileActivityStream({
                 url: this.url,
                 pattern,
             }));
         }
 
         createNetworkActivityStream() {
-            return new ActivityStream(rpc.postMessage({
-                action: 'createNetworkActivityStream',
+            return new ActivityStream(rpc.createNetworkActivityStream({
                 url: this.url,
             }));
         }
