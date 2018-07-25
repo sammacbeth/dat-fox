@@ -38,5 +38,10 @@
     "options_ui": {
         "page": "pages/options.html",
         "browser_style": false
-    }
+    },
+    "content_scripts": [{
+        "matches": ["http://*/*"],
+        "js": ["content_script.js"],
+        "run_at": "document_start"
+    }]
 }
