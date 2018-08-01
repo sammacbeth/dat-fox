@@ -20,7 +20,7 @@ async function testGateway(setLabel) {
 
 async function testVersion(setLabel) {
     setLabel('Checking helper version...');
-    const version = await bridge.postMessage({ action: 'getVersion' });
+    const version = await bridge.api.getVersion();
     const wantedVersion = '0.0.5';
     if (version < wantedVersion) {
         setLabel(`Helper version ${version} not up-to-date. Latest is ${wantedVersion}`);

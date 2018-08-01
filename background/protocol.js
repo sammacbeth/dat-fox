@@ -32,19 +32,14 @@ function init() {
         urls: ['http://dat.localhost/*'],
     }, ['blocking']);
 
-    // insert contentscript on dat pages
-    browser.webRequest.onCompleted.addListener((details) => {
-        const host = details.url.split('/')[2];
-        if (datSites.has(host) || datUrlMatcher.test(host)) {
-            browser.tabs.executeScript(details.tabId, {
-                file: browser.extension.getURL('content_script.js'),
-                runAt: 'document_start',
-            });
-            showDatSecureIcon(details.tabId);
+    // trigger dat secure page action for dat pages
+    browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
+        if (changeInfo.url && changeInfo.url.startsWith('http')) {
+            const host = changeInfo.url.split('/')[2];
+            if (datSites.has(host) || datUrlMatcher.test(host)) {
+                showDatSecureIcon(tabId);
+            }
         }
-    }, {
-        urls: ['http://*/*'],
-        types: ['main_frame']
     });
 }
 

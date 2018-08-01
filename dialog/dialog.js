@@ -1,12 +1,14 @@
 import createDatArchiveApi from '../common/dat-archive-rpc';
 
 const { bridge } = browser.extension.getBackgroundPage();
-const DatArchive = createDatArchiveApi(bridge);
+const DatArchive = createDatArchiveApi(bridge.api);
 const port = browser.runtime.connect();
 
 // read options for dialog from url
 const message = JSON.parse(decodeURIComponent(document.location.hash).substring(1));
-if (!message.opts) {
+if (message.args && message.args[0]) {
+    message.opts = message.args[0].opts || {};
+} else {
     message.opts = {};
 }
 const { action, opts, id } = message;

@@ -1,38 +1,22 @@
-/* global _datfoxPostMessage, _datfoxAddListener */
 import createDatArchiveApi from '../common/dat-archive-rpc';
 import urlParse from 'url-parse';
+import Spanan from 'spanan';
 
 (function (window) {
-    let messageIdx = 0;
-    const waitingForResponse = new Map();
+    const wrapper = new Spanan((message) => {
+        message.source = 'datfox-api';
+        window.postMessage(message, '*');
+    });
+    const proxy = wrapper.createProxy();
 
-    function postMessage(message) {
-        console.log('send', message);
-        return new Promise((resolve, reject) => {
-            message.id = messageIdx++;
-            waitingForResponse.set(message.id, {
-                resolve,
-                reject,
-            });
-            _datfoxPostMessage(message);
-        });
-    }
-
-    _datfoxAddListener((responseJSON) => {
-        const response = JSON.parse(responseJSON);
-        console.log('Received: ', response);
-        if (waitingForResponse.has(response.id)) {
-            const { resolve, reject } = waitingForResponse.get(response.id);
-            waitingForResponse.delete(response.id);
-            if (response.error) {
-                reject(response.error);
-            } else {
-                resolve(response.result);
-            }
+    window.addEventListener('message', (event) => {
+        if (event.source === window && event.data && 
+                event.data.source === 'datfox-api-response') {
+            wrapper.handleMessage(event.data);
         }
     });
 
-    window.DatArchive = createDatArchiveApi({ postMessage });
+    window.DatArchive = createDatArchiveApi(proxy);
 
     window.URL = urlParse;
 
