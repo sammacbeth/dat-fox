@@ -10,11 +10,13 @@ const listeners = [];
 port.onMessage.addListener((response) => {
     response.source = 'datfox-api-response';
     window.postMessage(response, '*');
+    console.log('recv', response.uuid, response.action, response.response);
 });
 
 window.addEventListener('message', (event) => {
     if (event.source === window && event.data && 
             event.data.source === 'datfox-api') {
+        console.log('send', event.data.uuid, event.data.action, ...event.data.args);
         port.postMessage(event.data);
     }
 });
@@ -44,5 +46,7 @@ function rewriteDatImageUrls() {
 
 rewriteDatImageUrls();
 // rewrite images on the fly
-const observer = new MutationObserver(rewriteDatImageUrls);
-observer.observe(document.body, { childList:true, subtree:true });
+document.onload = () => {
+    const observer = new MutationObserver(rewriteDatImageUrls);
+    observer.observe(document.body, { childList:true, subtree:true });
+}
