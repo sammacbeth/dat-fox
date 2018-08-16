@@ -8,6 +8,7 @@ const port = browser.runtime.connect();
 const message = JSON.parse(decodeURIComponent(document.location.hash).substring(1));
 if (message.args && message.args[0]) {
     message.opts = message.args[0].opts || {};
+    message.url = message.args[0].url;
 } else {
     message.opts = {};
 }
@@ -93,7 +94,7 @@ async function setupForm() {
             });
         }, 'fork-form', 'fork-submit');
     } else if (action === 'selectArchive') {
-        const library = await bridge.postMessage({ action: 'listLibrary' });
+        const library = await bridge.api.listLibrary()  ;
         const archiveList = document.getElementById('archives');
         library.forEach(async ({ url, dir }) => {
             const archive = new DatArchive(url);
