@@ -1,6 +1,5 @@
-import { proxyReady, setGatewayAddress } from './proxy';
 import settings from './settings';
-import protocol from './protocol';
+import protocol, { setGatewayAddress } from './protocol';
 import pageAction from './page-action';
 import NativeBridge from './native-bridge';
 import datApis, { useNativeBridge } from './dat-apis';
@@ -8,7 +7,7 @@ import { addDatSite } from './sites';
 import dialog from './dialog';
 
 // initialise proxy pac file
-proxyReady.then(() => {
+Promise.resolve().then(() => {
     // get gatewayaddress from settings
     settings.load();
     // register listeners for urls which should be handled by the dat protocol
