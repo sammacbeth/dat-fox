@@ -6,6 +6,8 @@ import datApis, { useNativeBridge } from './dat-apis';
 import { addDatSite } from './sites';
 import dialog from './dialog';
 
+browser.processScript.setAPIScript(browser.runtime.getURL('window.js'));
+
 // initialise proxy pac file
 Promise.resolve().then(() => {
     // get gatewayaddress from settings
@@ -70,35 +72,44 @@ const handlers = {
     dialogResponse: (message) => dialog.onMessage(message),
 };
 
-browser.runtime.onConnect.addListener((port) => {
-    port.onMessage.addListener((message) => {
-        const { uuid, action, args } = message;
-        if (passthroughActions.has(action)) {
-            bridge.api[action](...args).then(
-                response => ({ uuid, action, response }),
-                error => ({ uuid, action, error })
-            ).then(response => {
-                port.postMessage(response);
-            });
-        } else if (handlers[action]) {
-            handlers[action](message).then((response) => {
-                port.postMessage({
-                    uuid,
-                    action,
-                    response,
-                });
-            }, (error) => {
-                port.postMessage({
-                    uuid,
-                    action,
-                    error: error,
-                });
-            });
-        } else {
-            port.postMessage({
+function messageHandler(message, responder) {
+    const { uuid, action, args } = message;
+    if (passthroughActions.has(action)) {
+        bridge.api[action](...args).then(
+            response => ({ uuid, action, response }),
+            error => ({ uuid, action, error })
+        ).then(response => {
+            responder(response);
+        });
+    } else if (handlers[action]) {
+        handlers[action](message).then((response) => {
+            responder({
                 uuid,
-                error: 'unsupported action',
+                action,
+                response,
             });
-        }
-    });
+        }, (error) => {
+            responder({
+                uuid,
+                action,
+                error: error,
+            });
+        });
+    } else {
+        responder({
+            uuid,
+            error: 'unsupported action',
+        });
+    }
+};
+
+
+browser.runtime.onMessage.addListener((message) =>
+    messageHandler(message, browser.processScript.sendMessage.bind(browser.processScript))
+);
+
+browser.runtime.onConnect.addListener((port) => {
+    port.onMessage.addListener((message) =>
+        messageHandler(message, port.postMessage.bind(port))
+    );
 });

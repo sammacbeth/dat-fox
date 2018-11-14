@@ -1,0 +1,27 @@
+[
+  {
+    "namespace": "processScript",
+    "functions": [
+      {
+        "name": "setAPIScript",
+        "type": "function",
+        "description": "",
+        "async": true,
+        "parameters": [{
+          "name": "script url",
+          "type": "string"
+        }]
+      },
+      {
+        "name": "sendMessage",
+        "type": "function",
+        "description": "",
+        "async": true,
+        "parameters": [{
+          "name": "message",
+          "type": "any"
+        }]
+      }
+    ]
+  }
+]

@@ -3,6 +3,7 @@
  */
 // import mime from 'mime';
 import parseUrl from 'parse-dat-url';
+import mime from 'mime';
 import { addDatSite, datSites } from './sites';
 import { showDatSecureIcon } from './page-action';
 
@@ -15,7 +16,7 @@ export function setGatewayAddress(addr) {
 
 function init() {
     browser.protocol.registerProtocol('dat', (request) => {
-        const { host, pathname } = parseUrl(request.url);
+        const { pathname } = parseUrl(request.url);
         return {
             contentType: mime.getType(decodeURIComponent(pathname)) || 'text/html',
             content: {
