@@ -4,7 +4,7 @@
 // import mime from 'mime';
 import parseUrl from 'parse-dat-url';
 import mime from 'mime';
-import { addDatSite, datSites } from './sites';
+import { datSites } from './sites';
 import { showDatSecureIcon } from './page-action';
 
 const datUrlMatcher = /^[0-9a-f]{64}(\+[0-9]+)?$/;
@@ -39,12 +39,12 @@ function init() {
                         return {
                             done: true,
                             value: buffer,
-                        }
+                        };
                     }
                     return {
                         done: true,
                         value: new ArrayBuffer(),
-                    }
+                    };
                 }
             }
         };

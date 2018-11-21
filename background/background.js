@@ -107,8 +107,7 @@ function messageHandler(message, responder) {
             error: 'unsupported action',
         });
     }
-};
-
+}
 
 browser.runtime.onMessage.addListener((message) =>
     messageHandler(message, browser.processScript.sendMessage.bind(browser.processScript))
