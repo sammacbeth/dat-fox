@@ -65,12 +65,14 @@ function forEachTab(fn) {
   }
 }
 
+const datUrlMatcher = /^http:\/\/[0-9a-f]{64}\/.*$/;
+
 function isDatPage(document, window) {
   if (!document || !document.location || !window) {
     return false;
   }
   const currentUrl = window.location.href;
-  if (currentUrl.indexOf('dat://') !== 0) {
+  if (currentUrl.indexOf('dat://') !== 0 && !datUrlMatcher.test(currentUrl)) {
     return false;
   }
   return true;

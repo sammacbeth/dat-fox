@@ -1,4 +1,5 @@
 import settings from './settings';
+import { proxyReady, setGatewayAddress as setProxyAddress } from './proxy';
 import protocol, { setGatewayAddress } from './protocol';
 import pageAction from './page-action';
 import NativeBridge from './native-bridge';
@@ -8,8 +9,13 @@ import dialog from './dialog';
 
 browser.processScript.setAPIScript(browser.runtime.getURL('window.js'));
 
+function updateGateway(addr) {
+    setGatewayAddress(addr);
+    setProxyAddress(addr);
+}
+
 // initialise proxy pac file
-Promise.resolve().then(() => {
+proxyReady.then(() => {
     // get gatewayaddress from settings
     settings.load();
     // register listeners for urls which should be handled by the dat protocol
@@ -28,9 +34,9 @@ global.resetBridge = async () => {
     useNativeBridge(bridge.api);
     const port = 3000 + Math.floor(Math.random() * 500);
     await bridge.api.startGateway({ port });
-    setGatewayAddress(`http://localhost:${port}`);
+    updateGateway(`http://localhost:${port}`);
     // add actions which the helper API supports
-    ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile', 'writeFile', 'mkdir', 
+    ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile', 'writeFile', 'mkdir',
         'unlink', 'rmdir', 'diff', 'commit', 'revert', 'download', 'createFileActivityStream',
         'createNetworkActivityStream', 'pollActivityStream', 'closeActivityStream', 'configure',
         'copy', 'rename']

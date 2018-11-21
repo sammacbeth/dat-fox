@@ -1,4 +1,4 @@
-
+return;
 const port = browser.runtime.connect();
 
 function postMessage(message) {
@@ -8,15 +8,13 @@ function postMessage(message) {
 const listeners = [];
 
 port.onMessage.addListener((response) => {
-    response.source = 'datfox-api-response';
+    response.source = 'dat-api-response';
     window.postMessage(response, '*');
-    console.log('recv', response.uuid, response.action, response.response);
 });
 
 window.addEventListener('message', (event) => {
-    if (event.source === window && event.data && 
-            event.data.source === 'datfox-api') {
-        console.log('send', event.data.uuid, event.data.action, ...event.data.args);
+    if (event.source === window && event.data &&
+            event.data.source === 'dat-api') {
         port.postMessage(event.data);
     }
 });

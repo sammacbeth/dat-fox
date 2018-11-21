@@ -17,21 +17,33 @@ export function setGatewayAddress(addr) {
 function init() {
     browser.protocol.registerProtocol('dat', (request) => {
         const { pathname } = parseUrl(request.url);
+        let reader = null;
         return {
             contentType: mime.getType(decodeURIComponent(pathname)) || 'text/html',
             content: {
                 async next() {
-                    const contentBlob = await (await fetch(`${gatewayUrl}/${request.url}`)).blob();
-                    const buffer = await new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            resolve(reader.result);
+                    if (reader) {
+                        // already streaming
+                        const { done, value } = await reader.read();
+                        return { done, value: value ? value.buffer : undefined };
+                    }
+                    const gatewayRequest = await fetch(`${gatewayUrl}/${request.url}`);
+                    if (gatewayRequest.ok) {
+                        if (gatewayRequest.body) {
+                            // request supports streaming
+                            reader = gatewayRequest.body.getReader();
+                            const { done, value } = await reader.read();
+                            return { done, value: value.buffer };
                         }
-                        reader.readAsArrayBuffer(contentBlob);
-                    });
+                        const buffer = await gatewayRequest.arrayBuffer();
+                        return {
+                            done: true,
+                            value: buffer,
+                        }
+                    }
                     return {
                         done: true,
-                        value: buffer,
+                        value: new ArrayBuffer(),
                     }
                 }
             }
