@@ -44,7 +44,7 @@ function forEachTab(fn) {
   while (windowEnumerator.hasMoreElements()) {
     const window = windowEnumerator.getNext();
 
-    if (window.gBrowser && window.gBrowser.tabs) {
+    if (window.gBrowser && window.gBrowser.tabs && window.gBrowser.tabs.forEach) {
       // this is a browser (chrome) window so we need to inject the
       // content scripts in all openend tabs
       window.gBrowser.tabs.forEach((tab) => {

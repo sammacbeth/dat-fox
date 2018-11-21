@@ -57,6 +57,8 @@ function init() {
             if (datSites.has(host) || datUrlMatcher.test(host)) {
                 showDatSecureIcon(tabId);
             }
+        } else if (changeInfo.url && changeInfo.url.startsWith('dat:')) {
+            showDatSecureIcon(tabId);
         }
     });
 }
