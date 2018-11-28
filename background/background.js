@@ -39,7 +39,7 @@ global.resetBridge = async () => {
     ['resolveName', 'getInfo', 'stat', 'readdir', 'history', 'readFile', 'writeFile', 'mkdir',
         'unlink', 'rmdir', 'diff', 'commit', 'revert', 'download', 'createFileActivityStream',
         'createNetworkActivityStream', 'pollActivityStream', 'closeActivityStream', 'configure',
-        'copy', 'rename']
+        'copy', 'rename', 'load']
         .forEach((action) => {
             passthroughActions.add(action);
         });

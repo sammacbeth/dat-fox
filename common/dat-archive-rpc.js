@@ -104,6 +104,10 @@ export default function(rpc) {
             return rpc.resolveName({ name });
         }
 
+        static async load(url) {
+            return rpc.load({ url }).then(url => new DatArchive(url));
+        }
+
         async getInfo(opts) {
             return rpc.getInfo({ url: this.url, opts });
         }
