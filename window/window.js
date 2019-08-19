@@ -18,6 +18,16 @@ import Spanan from 'spanan';
 
     window.DatArchive = createDatArchiveApi(proxy);
 
-    window.URL = urlParse;
+    let urlTest = new window.URL('dat://example.com');
+    if (urlTest.hostname !== 'example.com' ||
+            urlTest.origin !== 'dat://example.com') {
+        let originalURL = window.URL;
+        let newURL = urlParse;
+        
+        newURL.createObjectURL = originalURL.createObjectURL;
+        newURL.revokeObjectURL = originalURL.revokeObjectURL;
+        
+        window.URL = newURL;
+    }
 
 })(window);
