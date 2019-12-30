@@ -1,6 +1,6 @@
 {
   "name": "dat-fox",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A Webextension for the dat:// protocol",
   "main": "background.js",
   "scripts": {
