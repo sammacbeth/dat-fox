@@ -99,15 +99,21 @@ async function setupForm() {
         library.forEach(async ({ url, dir }) => {
             const archive = new DatArchive(url);
             const { title, description } = await archive.getInfo();
-            const template = document.createElement('template');
-            template.innerHTML = `<a class="list-group-item list-group-item-action flex-column align-items-start" href="#">
-                <h5>${title}</h5>
-                <small>${dir}</small>
-                <p>${description || ''}</p>
-            </a>`;
-            const elem = template.content.firstChild;
-            archiveList.appendChild(elem);
-            elem.onclick = () => {
+
+            const row = document.createElement('a');
+            row.className = 'list-group-item list-group-item-action flex-column align-items-start';
+            const titleElem = document.createElement('h5');
+            titleElem.innerText = title;
+            const dirElem = document.createElement('small');
+            dirElem.innerText = dir;
+            const descElem = document.createElement('p');
+            descElem.innerText = description || '';
+
+            row.appendChild(titleElem);
+            row.appendChild(dirElem);
+            row.appendChild(descElem);
+            archiveList.appendChild(row);
+            row.onclick = () => {
                 port.postMessage({
                     action: 'dialogResponse',
                     dialogId: id,
