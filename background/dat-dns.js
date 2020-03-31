@@ -7,8 +7,8 @@ export function resolveName(host) {
         if (wellKnownCache.has(host)) {
             resolve(Promise.resolve(wellKnownCache.get(host)));
         }
-        fetch(`https://${host}/.well-known/dat`, { redirect: 'manual' }).then((resp) => {
-            if (resp.ok) {
+        fetch(`https://${host}/.well-known/dat`, { redirect: 'follow' }).then((resp) => {
+            if (resp.ok && new URL(resp.url).protocol == 'https:') {
                 return resp.text().then(text => {
                     try {
                         return /^dat:\/\/([0-9a-f]{64})/i.exec(text.split('/n')[0])[1];
