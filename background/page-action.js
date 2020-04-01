@@ -6,7 +6,7 @@ import datApis from './dat-apis';
 
 function init() {
     browser.webRequest.onCompleted.addListener((details) => {
-        const host = details.url.split('/')[2];
+        const host = new URL(details.url).hostname;
         datApis.DatArchive.resolveName(host).then((wellKnown) => {
             if (wellKnown) {
                 showDatAvailableIcon(details.tabId);
