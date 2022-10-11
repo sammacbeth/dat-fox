@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "eslint": "^4.19.1",
-    "web-ext": "^2.8.0",
+    "web-ext": "^7.2.0",
     "webpack": "^2.3.2"
   }
 }
